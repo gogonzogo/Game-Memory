@@ -1,0 +1,11 @@
+@use '../utilities/variables';
+
+.footer-section {
+  color: white;
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 5px;
+}

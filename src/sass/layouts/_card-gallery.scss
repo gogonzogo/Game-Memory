@@ -1,0 +1,73 @@
+@use '../utilities/variables';
+
+.card-gallery__wrapper {
+  background-color: #910000;
+  background-image: url("https://www.transparenttextures.com/patterns/wood-pattern.png");
+  border-radius: 150px;
+  min-width: 230px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 80vh;
+}
+
+
+.card-gallery__container {
+  width: 200px;
+  background-image: linear-gradient(to bottom, #006400, #008000);
+  border-radius: 150px;
+}
+
+.card-gallery {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-evenly;
+  width: 210px;
+  gap: 5px;
+  height: 75vh;
+}
+
+
+.card-container {
+  width: 40px;
+  height: 60px;
+  transform: none;
+}
+
+.card {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  transition: transform 3s;
+  transform-style: preserve-3d;
+  box-shadow: 0 0.0625em 0.125em rgba(0, 0, 0, 0.15);
+
+}
+
+.card-img {
+  width: 40px;
+  height: 60px;
+}
+
+.card-front,
+.card-back {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  backface-visibility: hidden;
+  border-radius: 5px;
+}
+
+.card-front {
+  border-radius: 0.25em;
+  border: 3px solid white;
+  background-color: #f2f2f8;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='8' viewBox='0 0 8 8'%3E%3Cg fill='%23f40000' fill-opacity='1'%3E%3Cpath fill-rule='evenodd' d='M0 0h4v4H0V0zm4 4h4v4H4V4z'/%3E%3C/g%3E%3C/svg%3E");
+}
+
+.card-back {
+  transform: rotateY(180deg);
+
+}

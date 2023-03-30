@@ -1,0 +1,271 @@
+.card-gallery__wrapper {
+  background-color: #910000;
+  background-image: url("https://www.transparenttextures.com/patterns/wood-pattern.png");
+  border-radius: 150px;
+  min-width: 230px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 80vh;
+}
+
+.card-gallery__container {
+  width: 200px;
+  background-image: linear-gradient(to bottom, #006400, #008000);
+  border-radius: 150px;
+}
+
+.card-gallery {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-evenly;
+  width: 210px;
+  gap: 5px;
+  height: 75vh;
+}
+
+.card-container {
+  width: 40px;
+  height: 60px;
+  transform: none;
+}
+
+.card {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  transition: transform 3s;
+  transform-style: preserve-3d;
+  box-shadow: 0 0.0625em 0.125em rgba(0, 0, 0, 0.15);
+}
+
+.card-img {
+  width: 40px;
+  height: 60px;
+}
+
+.card-front,
+.card-back {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  backface-visibility: hidden;
+  border-radius: 5px;
+}
+
+.card-front {
+  border-radius: 0.25em;
+  border: 3px solid white;
+  background-color: #f2f2f8;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='8' viewBox='0 0 8 8'%3E%3Cg fill='%23f40000' fill-opacity='1'%3E%3Cpath fill-rule='evenodd' d='M0 0h4v4H0V0zm4 4h4v4H4V4z'/%3E%3C/g%3E%3C/svg%3E");
+}
+
+.card-back {
+  transform: rotateY(180deg);
+}
+
+.footer-section {
+  color: white;
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 5px;
+}
+
+.content__outside-container {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  padding: 0 18px;
+  height: 85vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 150px;
+  background-color: #000000;
+}
+
+.content__middle-container {
+  background-color: #910000;
+  background-image: url("https://www.transparenttextures.com/patterns/wood-pattern.png");
+  border-radius: 150px;
+  min-width: 290px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 80vh;
+}
+
+.content__inside-container {
+  width: 260px;
+  background-image: linear-gradient(to bottom, #006400, #008000);
+  border-radius: 150px;
+  height: 75vh;
+}
+
+.page__primary-title {
+  position: fixed;
+  top: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+  color: black;
+  z-index: 2;
+  width: 100%;
+  text-align: center;
+}
+
+.page__secondary-title {
+  position: fixed;
+  bottom: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+  color: black;
+  z-index: 2;
+  width: 100%;
+  text-align: center;
+}
+
+.content__inside-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  align-items: center;
+  text-align: center;
+  padding: 16px;
+}
+
+.header-section {
+  background-color: black;
+}
+
+.header-container {
+  display: flex;
+  justify-content: space-evenly;
+  color: white;
+}
+
+.header-logo__container {
+  padding: 10px;
+}
+
+.mobile-menu__container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  transition: all 2000ms cubic-bezier(0.4, 0, 0.2, 1), height 2000ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.menu .link:hover,
+.menu .link:focus {
+  text-decoration: underline;
+}
+
+.menu-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  padding: 32px;
+  z-index: 1000;
+  transform: translateX(100%);
+  transition: 2000ms cubic-bezier(0.4, 0, 0.2, 1);
+  display: flex;
+  justify-content: center;
+}
+
+.menu-container.is-open {
+  transform: translateX(0);
+}
+
+.mobile-menu-content__container {
+  background-color: rgba(189, 205, 214, 0.6);
+  border-radius: 15px;
+  padding: 20px;
+  height: fit-content;
+  margin: auto 0;
+  box-shadow: rgba(17, 17, 26, 0.1) 0px 8px 24px, rgba(17, 17, 26, 0.1) 0px 16px 56px, rgba(17, 17, 26, 0.1) 0px 24px 80px;
+}
+
+.mobile-contacts__list {
+  margin-top: 8px;
+  margin-left: 4px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.mobile-menu-contacts__link {
+  position: relative;
+  font-family: "Nunito";
+  font-size: 14px;
+}
+.mobile-menu-contacts__link:not(:last-child) {
+  margin-bottom: 20px;
+}
+
+.social-list {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.social-list__link:not(:last-child) {
+  margin-bottom: 20px;
+}
+
+.mobile-social-icon {
+  width: 40px;
+  height: 40px;
+  fill: currentColor;
+  transition: color 2000ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+@media screen and (min-width: 480px) {
+  .mobile-menu-contacts__link {
+    font-size: 20px;
+  }
+  .mobile-social-icon {
+    width: 60px;
+    height: 60px;
+  }
+}
+@media screen and (min-width: 768px) {
+  .mobile-menu__container {
+    display: none;
+  }
+}
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background-color: #efebf4;
+  background-image: url("data:image/svg+xml,%3Csvg width='80' height='88' viewBox='0 0 80 88' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M22 21.91V26h-2c-9.94 0-18 8.06-18 18 0 9.943 8.058 18 18 18h2v4.09c8.012.722 14.785 5.738 18 12.73 3.212-6.99 9.983-12.008 18-12.73V62h2c9.94 0 18-8.06 18-18 0-9.943-8.058-18-18-18h-2v-4.09c-8.012-.722-14.785-5.738-18-12.73-3.212 6.99-9.983 12.008-18 12.73zM54 58v4.696c-5.574 1.316-10.455 4.428-14 8.69-3.545-4.262-8.426-7.374-14-8.69V58h-5.993C12.27 58 6 51.734 6 44c0-7.732 6.275-14 14.007-14H26v-4.696c5.574-1.316 10.455-4.428 14-8.69 3.545 4.262 8.426 7.374 14 8.69V30h5.993C67.73 30 74 36.266 74 44c0 7.732-6.275 14-14.007 14H54zM42 88c0-9.94 8.06-18 18-18h2v-4.09c8.016-.722 14.787-5.738 18-12.73v7.434c-3.545 4.262-8.426 7.374-14 8.69V74h-5.993C52.275 74 46 80.268 46 88h-4zm-4 0c0-9.943-8.058-18-18-18h-2v-4.09c-8.012-.722-14.785-5.738-18-12.73v7.434c3.545 4.262 8.426 7.374 14 8.69V74h5.993C27.73 74 34 80.266 34 88h4zm4-88c0 9.943 8.058 18 18 18h2v4.09c8.012.722 14.785 5.738 18 12.73v-7.434c-3.545-4.262-8.426-7.374-14-8.69V14h-5.993C52.27 14 46 7.734 46 0h-4zM0 34.82c3.213-6.992 9.984-12.008 18-12.73V18h2c9.94 0 18-8.06 18-18h-4c0 7.732-6.275 14-14.007 14H14v4.696c-5.574 1.316-10.455 4.428-14 8.69v7.433z' fill='%230405f2' fill-opacity='1' fill-rule='evenodd'/%3E%3C/svg%3E");
+}
+
+ul {
+  list-style: none;
+}
+
+.main-section {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  padding: 0 18px;
+  height: 85vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 150px;
+  background-color: #000000;
+}/*# sourceMappingURL=index.css.map */
