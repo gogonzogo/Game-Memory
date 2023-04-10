@@ -3,6 +3,7 @@ import { Notify } from "notiflix";
 const refs = {
   cardGallery: document.querySelector('.card-gallery'),
   timer: document.querySelector(".timer"),
+  score: document.querySelector(".score"),
   resetBtn: document.querySelector(".reset__button"),
   pauseBtn: document.querySelector(".pause__button"),
   startBtn: document.querySelector(".start__button"),
@@ -41,7 +42,7 @@ let firstMatchTime = null;
 let totalGameTime = null;
 let lastUsername = null;
 let difficulty = null;
-
+let score = 0;
 refs.playBtn.disabled = true;
 
 async function getCards() {
@@ -228,7 +229,7 @@ function onCardClick(e) {
   const cardContainer = e.target.closest('.card');
   cardContainer.style.transform = 'rotateY(.5turn)';
   clickedCards.push(cardContainer);
-  if (clickedCards.length < 2) {
+  if (clickedCards.length === 1) {
     return
   } else {
     doCardsMatch(clickedCards[0], clickedCards[1])
@@ -239,6 +240,7 @@ function doCardsMatch(firstCard, secondCard) {
   let firstCardImgSrc = firstCard.querySelector('.card__img').getAttribute('src');
   let secondCardImgSrc = secondCard.querySelector('.card__img').getAttribute('src');
   if (firstCardImgSrc !== secondCardImgSrc) {
+    scoreKeeper(score -= 1);
     setTimeout(() => {
       firstCard.style.transform = 'none';
       secondCard.style.transform = 'none';
@@ -246,6 +248,7 @@ function doCardsMatch(firstCard, secondCard) {
     clickedCards.length = 0;
     return;
   } else if (firstCardImgSrc === secondCardImgSrc) {
+    scoreKeeper(score += 1);
     endOfGame();
     matchedCardSplits();
     matchedCards.push(firstCard, secondCard);
@@ -297,17 +300,18 @@ function matchedCardSplits() {
 };
 
 function endOfGame() {
-  console.log(`end of game called`);
-  console.log(matchedCards.length);
-  console.log(NUMBER_OF_CARDS);
   if (matchedCards.length !== NUMBER_OF_CARDS) {
-    console.log(`end of game check`);
     return;
   } else {
-    stopTimer();
+    console.log(lastUsername, difficulty, firstMatchTime, totalGameTime, score);
+    updateUserStats(lastUsername, difficulty, firstMatchTime, totalGameTime, score);
+    stopGame();
     Notify.success('You won!');
-    console.log(`end of game success`);
   };
+};
+
+function scoreKeeper(score) {
+  refs.score.textContent = score;
 };
 
 function onHintBtnClick(e) {
@@ -338,7 +342,7 @@ function submitForm(e) {
   refs.loginForm.reset();
 };
 
-function updateUserStats(lastUsername, difficulty, firstMatchTime, totalGameTime) {
+function updateUserStats(lastUsername, difficulty, firstMatchTime, totalGameTime, score) {
   if (lastUsername === null) {
     return;
   }
@@ -348,7 +352,8 @@ function updateUserStats(lastUsername, difficulty, firstMatchTime, totalGameTime
       fastestTimeToMatch: firstMatchTime,
       longestTimeToMatch: firstMatchTime,
       fastestTotalGameTime: totalGameTime,
-      longestTotalGameTime: totalGameTime
+      longestTotalGameTime: totalGameTime,
+      highestScore: score,
     };
   } else {
     if (firstMatchTime < userStats[difficulty].fastestTimeToMatch || userStats[difficulty].fastestTimeToMatch === null) {
@@ -363,16 +368,26 @@ function updateUserStats(lastUsername, difficulty, firstMatchTime, totalGameTime
     if (totalGameTime > userStats[difficulty].longestTotalGameTime || userStats[difficulty].longestTotalGameTime === null) {
       userStats[difficulty].longestTotalGameTime = totalGameTime;
     }
+    if (score > userStats[difficulty].highestScore || userStats[difficulty].highestScore === null) {
+      userStats[difficulty].highestScore = score;
+    }
   }
   localStorage.setItem(lastUsername, JSON.stringify(userStats));
 };
 
 function resetGame(e) {
-  stopTimer();
+  if (!e.target.classList.contains('reset__button')) {
+    return;
+  }
+  stopGame();
   getCards();
 };
 
-function pauseGame() {
+function pauseGame(e) {
+  if (isPaused) {
+    return;
+  } else if (e.target.classList.contains('pause__button')) {
+  }
   const cardList = document.querySelectorAll('.card');
   clearInterval(timerInterval);
   elapsedTime = Date.now() - startTime.getTime();
@@ -386,6 +401,7 @@ function startTimer() {
     startTime = new Date();
   } else {
     startTime = new Date(Date.now() - elapsedTime);
+    isPaused = false;
   }
   timerInterval = setInterval(() => {
     elapsedTime = Date.now() - startTime.getTime();
@@ -396,27 +412,25 @@ function startTimer() {
 };
 
 function continueGame(e) {
-  const cardList = document.querySelectorAll('.card');
-  if (e.target === refs.startBtn) {
+  if (e.target.classList.contains('start__button')) {
+    const cardList = document.querySelectorAll('.card');
     cardList.forEach(card => card.classList.remove('disabled'));
-    startTimer();
     refs.hintBtn.disabled = false;
+    startTimer();
   };
 };
 
-function stopTimer() {
+function stopGame(e = null) {
+  if (e && !e.target.classList.contains('stop__button')) {
+    return;
+  }
   clearInterval(timerInterval);
   let currentTime = new Date().getTime();
   totalGameTime = ((currentTime - startTime) / 1000) % 60;
-  updateUserStats(lastUsername, difficulty, firstMatchTime, totalGameTime);
   refs.timer.innerHTML = '00:00';
-};
-
-function stopGame(e) {
-  if (e.target === refs.stopBtn) {
-    stopTimer();
-    refs.cardGallery.innerHTML = '';
-  };
+  refs.score.innerHTML = '0';
+  matchedCards = [];
+  score = 0;
 };
 
 function addLeaderingZero(time) {
