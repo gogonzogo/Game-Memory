@@ -128,6 +128,7 @@ function getRandomNum() {
 };
 
 function onPlayBtnClick() {
+  refs.buttonClickSound.play();
   getRandomNum();
   getCards();
 }
@@ -137,6 +138,7 @@ function onStyleClick(e) {
   if (!e.target.closest('li')) {
     return;
   };
+  refs.buttonClickSound.play();
   console.log(`style clicked`);
   refs.styleList.forEach(item => item.classList.remove('chosen-style'));
   e.target.closest('li').classList.add('chosen-style');
@@ -161,6 +163,7 @@ function onDifficultyClick(e) {
   if (e.target.nodeName !== 'LI') {
     return;
   };
+  refs.buttonClickSound.play();
   refs.difficultyList.forEach(item => item.classList.remove('chosen-difficulty'));
   NUMBER_OF_CARDS = Number(e.target.dataset.value);
   HALF_SELECTED_CARD_COUNT = NUMBER_OF_CARDS / 2;
@@ -320,7 +323,7 @@ function scoreKeeper(score) {
 };
 
 function onHintBtnClick(e) {
-  if (e.target.nodeName !== 'BUTTON') {
+  if (e.target.classList.contains('hint-btn')) {
     return;
   }
   refs.buttonClickSound.play();
@@ -412,7 +415,6 @@ function startTimer() {
     startTime = new Date(Date.now() - elapsedTime);
     isPaused = false;
   }
-  refs.buttonClickSound.play();
   timerInterval = setInterval(() => {
     elapsedTime = Date.now() - startTime.getTime();
     const minutes = Math.floor((elapsedTime / 1000 / 60) % 60);
