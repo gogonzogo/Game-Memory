@@ -21,15 +21,10 @@ const refs = {
   submitBtn: document.querySelector(".submit__btn"),
   closeModalBtn: document.querySelector(".login__modal-close"),
   loginForm: document.querySelector(".login__form"),
+  cardFlipSound: document.querySelector(".card-flip-sound"),
+  cardMatchSound: document.querySelector(".card-match-sound"),
+  buttonClickSound: document.querySelector(".button-click-sound"),
 };
-const buttonClickSound = new Audio();
-buttonClickSound.src = './assets/sounds/button-click.mp3';
-
-const cardFlipSound = new Audio();
-cardFlipSound.src = '../assets/sounds/card-flip.mp3';
-
-const cardMatchSound = new Audio();
-cardMatchSound.src = './assets/sounds/card-match.mp3';
 let NUMBER_OF_CARDS = null;
 let CHOSEN_STYLE = null;
 let HALF_SELECTED_CARD_COUNT = null;
@@ -232,7 +227,7 @@ function onCardClick(e) {
   if (!cardClicked || disabledCard) {
     return;
   };
-  cardFlipSound.play();
+  refs.cardFlipSound.play();
   const img = e.target.parentElement.querySelector('.card__img');
   const imgSrc = img.getAttribute('src');
   const cardContainer = e.target.closest('.card');
@@ -268,6 +263,7 @@ function doCardsMatch(firstCard, secondCard) {
       stackedMatchedCards(firstCard, secondCard);
       firstCard.classList.add('card__matched');
       secondCard.classList.add('card__matched');
+      refs.cardMatchSound.play();
     }, 1000);
   };
 };
@@ -327,6 +323,7 @@ function onHintBtnClick(e) {
   if (e.target.nodeName !== 'BUTTON') {
     return;
   }
+  refs.buttonClickSound.play();
   const cardList = document.querySelectorAll('.card');
   cardList.forEach(card => card.style.transform = 'rotateY(.5turn)')
 
@@ -343,6 +340,7 @@ function playBtnEnable() {
 
 function submitForm(e) {
   e.preventDefault();
+  refs.buttonClickSound.play();
   refs.modal.style.display = "none";
   const formData = new FormData(refs.loginForm);
   const data = Object.fromEntries(formData);
@@ -388,6 +386,7 @@ function resetGame(e) {
   if (!e.target.classList.contains('reset__button')) {
     return;
   }
+  refs.buttonClickSound.play();
   stopGame();
   getCards();
 };
@@ -397,6 +396,7 @@ function pauseGame(e) {
     return;
   } else if (e.target.classList.contains('pause__button')) {
   }
+  refs.buttonClickSound.play();
   const cardList = document.querySelectorAll('.card');
   clearInterval(timerInterval);
   elapsedTime = Date.now() - startTime.getTime();
@@ -412,6 +412,7 @@ function startTimer() {
     startTime = new Date(Date.now() - elapsedTime);
     isPaused = false;
   }
+  refs.buttonClickSound.play();
   timerInterval = setInterval(() => {
     elapsedTime = Date.now() - startTime.getTime();
     const minutes = Math.floor((elapsedTime / 1000 / 60) % 60);
@@ -422,6 +423,7 @@ function startTimer() {
 
 function continueGame(e) {
   if (e.target.classList.contains('start__button')) {
+    refs.buttonClickSound.play();
     const cardList = document.querySelectorAll('.card');
     cardList.forEach(card => card.classList.remove('disabled'));
     refs.hintBtn.disabled = false;
@@ -433,6 +435,7 @@ function stopGame(e = null) {
   if (e && !e.target.classList.contains('stop__button')) {
     return;
   }
+  refs.buttonClickSound.play();
   clearInterval(timerInterval);
   let currentTime = new Date().getTime();
   totalGameTime = ((currentTime - startTime) / 1000) % 60;
@@ -458,6 +461,7 @@ function loginModalClick(e) {
 
 function closeModal(e) {
   if (e.target === refs.closeModalBtn) {
+    refs.buttonClickSound.play();
     refs.modal.style.display = 'none';
   }
 };
