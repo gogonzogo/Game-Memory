@@ -210,6 +210,10 @@ body .card__front-classic,
   border: 3px solid white;
   border-radius: 0.25em;
 }
+body .card__matched,
+.classic .card__matched {
+  box-shadow: rgba(255, 255, 255, 0.4) 0px 2px 4px, rgba(255, 255, 255, 0.3) 0px 7px 13px -3px, rgb(0, 102, 0) 0px -3px 0px inset;
+}
 body .footer__section,
 .classic .footer__section {
   background-color: rgb(250, 208, 0);
@@ -726,14 +730,14 @@ body .mobile-social-icon,
 }
 
 .game-menu__title {
-  font-family: "Rubik Pixels";
+  font-family: "Sedgwick Ave Display";
   font-size: 22px;
   color: black;
   text-align: center;
 }
 
 .difficulty__list-title {
-  font-family: "Rubik Pixels";
+  font-family: "Sedgwick Ave Display";
   font-size: 18px;
   margin-bottom: 5px;
   text-align: center;
@@ -744,7 +748,7 @@ body .mobile-social-icon,
 }
 
 .difficulty__list-item {
-  font-family: "Rubik Pixels";
+  font-family: "Sedgwick Ave Display";
   font-size: 12px;
 }
 .difficulty__list-item:not(:last-child) {
@@ -773,7 +777,7 @@ body .mobile-social-icon,
 }
 
 .style__list-title {
-  font-family: "Rubik Pixels";
+  font-family: "Sedgwick Ave Display";
   font-size: 14px;
   margin-bottom: 25px;
   text-align: center;
@@ -830,7 +834,7 @@ body .mobile-social-icon,
 
 .play__button,
 .continue__button {
-  font-family: "Rubik Pixels";
+  font-family: "Sedgwick Ave Display";
   font-size: 14px;
   border: 1px solid black;
   border-radius: 2px;
@@ -848,7 +852,7 @@ body .mobile-social-icon,
 }
 
 .page__secondary-title {
-  font-family: "Rubik Pixels";
+  font-family: "Sedgwick Ave Display";
   font-size: 22px;
   text-align: center;
 }
