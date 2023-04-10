@@ -1,0 +1,27 @@
+@use '../utilities/variables';
+
+.timer__wrapper {
+  font-family: getFontFamily('classic-primary-font');
+  font-weight: 400;
+  font-size: 20px;
+  text-align: center;
+  color: none;
+  margin: 5px;
+  padding: 0 7px 2px 7px;
+  box-shadow: none;
+}
+
+@media screen and (min-width: 768px) {
+
+  .timer__wrapper {
+    font-size: 30px;
+  }
+}
+
+@media screen and (min-width: 1200px) {
+
+  .timer__wrapper {
+    font-size: 30px;
+    padding: 0 13px 4px 13px;
+  }
+}

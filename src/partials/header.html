@@ -1,18 +1,44 @@
-<header class="header-section">
-  <div class="header-container">
-    <div class="header-logo__container">
-      <h5 class="logo-text">
-        Gonzo Memory Game
-      </h5>
-    </div>
-    <div class="mobile-menu__container">
-      <button class="menu-toggle js-open-menu" aria-expanded="false" aria-controls="mobile-menu">
-        <svg width="20" height="20" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-          <path fill-rule="evenodd"
-            d="M3 5a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM3 10a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM3 15a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z"
-            clip-rule="evenodd"></path>
-        </svg>
+<header class="header__section">
+  <div class="header__container">
+    <div class="hint__button__wrapper">
+      <button class="hint__button" aria-label="hint button">
+        Hint
+        <span class="tooltiptext">See all cards<br />for 1/2 second</span>
       </button>
+    </div>
+    <div class="timer__wrapper">
+      <p class="timer">00:00</p>
+      <p class="timer__label label">GO! GO! GO!</p>
+    </div>
+    <ul class="game-controls__list">
+      <li class="game-controls__item">
+        <button class="game-controls__button game-controls__button-new-game reset__button fa-solid fa-clock-rotate-left"
+          aria-label="game control reset button">
+          <span class="tooltiptext tooltiptext-new-game">New Game</span>
+        </button>
+      </li>
+      <li class="game-controls__item">
+        <button class="game-controls__button pause__button game-controls__button-pause fa-solid fa-pause"
+          aria-label="game control play button">
+          <span class="tooltiptext tooltiptext-pause">Play Game</span>
+        </button>
+      </li>
+      <li class="game-controls__item">
+        <button class="game-controls__button start__button game-controls__button-play fa-solid fa-play"
+          aria-label="game control pause button">
+          <span class="tooltiptext tooltiptext-play">Pause Game</span>
+        </button>
+      </li>
+      <li class="game-controls__item">
+        <button class="game-controls__button stop__button js-stop-game game-controls__button-stop fa-solid fa-stop"
+          aria-label="game control stop button">
+          <span class="tooltiptext tooltiptext-stop">Stop Game</span>
+        </button>
+      </li>
+    </ul>
+    <div class="score__wrapper">
+      <p class="score">0</p>
+      <p class="score__label label">SCORE</p>
     </div>
   </div>
 </header>

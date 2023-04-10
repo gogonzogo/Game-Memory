@@ -1,15 +1,8 @@
 @use '../utilities/variables';
 
-.header-section {
-  background-color: black;
-}
-
-.header-container {
+.header__container {
   display: flex;
-  justify-content: space-evenly;
-  color: white;
-}
-
-.header-logo__container {
-  padding: 10px;
+  justify-content: space-around;
+  align-items: center;
+  padding: 6px;
 }

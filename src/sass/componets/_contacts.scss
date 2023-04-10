@@ -1,0 +1,44 @@
+@use '../utilities/variables';
+
+.footer__contacts-container {
+  display: none;
+}
+
+@media screen and (min-width: 768px) {
+  .footer__contacts-container {
+    display: flex;
+
+    .footer__contacts-list {
+      display: flex;
+      flex-direction: column;
+      margin: 0 15px;
+    }
+
+    .footer__contacts-link {
+      font-family: getFontFamily('classic-primary-font');
+      font-weight: getFontWeight('light-font');
+      font-size: getFontSize('medium-font');
+      display: flex;
+      align-items: center;
+      transition: color variables.$transition-time variables.$transition-time-function;
+
+      &:hover,
+      &:focus {
+        transform: scale(1.1);
+      }
+    }
+
+    .footer__contacts-icon {
+      margin-right: 10px;
+      fill: currentColor;
+    }
+  }
+}
+
+@media screen and (min-width: 768px) {
+  .footer__contacts-container {
+    .footer__contacts-link {
+      font-size: 22px;
+    }
+  }
+}

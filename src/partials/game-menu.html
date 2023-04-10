@@ -1,0 +1,62 @@
+<div class="game-menu__container">
+  <div class="game-menu__header">
+    <h1 class="game-menu__title">GONZO MEMORY GAME <br /> MENU</h1>
+  </div>
+  <button class="open__login-modal" style="width:auto;">Login</button>
+  <div class="difficulty__container">
+    <div class="difficulty__list-container">
+      <h2 class="difficulty__list-title">Difficulty</h2>
+      <ul class="difficulty__list">
+        <li class="difficulty__list-item" data-value="26">Dont do it - 26 cards</li>
+        <li class="difficulty__list-item" data-value="20">Hard - 20 cards</li>
+        <li class="difficulty__list-item" data-value="16">Medium - 16 cards</li>
+        <li class="difficulty__list-item" data-value="12">Easy - 12 cards</li>
+        <li class="difficulty__list-item" data-value="8">Childs play - 8 cards</li>
+        <li class="difficulty__list-item" data-value="4">Leave now - 4 cards</li>
+      </ul>
+    </div>
+  </div>
+  <div class="style__list-container">
+    <h2 class="style__list-title">Choose your style</h2>
+    <ul class="style__list">
+      <li class="style__list-item" data-value="classic">
+        <div class="classic-style__option">
+        </div>
+      </li>
+      <li class="style__list-item" data-value="marvel">
+        <svg class="marvel-style__icon">
+          <use href="./images/sprite.svg#icon-marvel"></use>
+        </svg>
+      </li>
+      <li class="style__list-item" data-value="pokemon">
+        <img src="./images/pokemoncard-back.png" class="pokemon-style__img" width="100" alt="Pokemon card back" />
+      </li>
+    </ul>
+  </div>
+  <div class="game-buttons__wrapper">
+    <button class="play__button game-toggle js-open-game" aria-expanded="false" aria-controls="game">Play</button>
+  </div>
+  <div class="game-menu__footer">
+    <div>
+      <h1 class="page__secondary-title">Is your memory good, or is it gonzo?</h1>
+    </div>
+  </div>
+</div>
+<div class="login-modal__container modal">
+  <form class="login__form animate">
+    <div class="imgcontainer">
+      <span class="login__modal-close" title="Close Modal">&times;</span>
+      <!-- <img src="img_avatar2.png" alt="Avatar" class="avatar"> -->
+    </div>
+    <div class="container">
+      <label for="uname"></label>
+      <input type="text" placeholder="Enter Username" name="uname" required>
+
+      <button class="submit__btn" type="submit">Submit</button>
+    </div>
+
+    <div class="container" style="background-color:#f1f1f1">
+    </div>
+  </form>
+</div>
+<script defer src="./js/mobile-menu.js" type="module"></script>

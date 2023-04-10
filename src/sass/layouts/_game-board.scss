@@ -1,0 +1,26 @@
+@use '../utilities/variables';
+
+.game-container.is-open {
+  transform: translateY(0);
+}
+
+.game-container {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 1000;
+  transform: translateY(100%);
+  transition: variables.$transition-time variables.$transition-time-function;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.game-board__container {
+  width: 100vw;
+  height: 100vh;
+  background-color: none;
+  background-image: none;
+}

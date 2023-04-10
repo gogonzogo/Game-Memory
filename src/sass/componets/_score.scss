@@ -1,0 +1,25 @@
+@use '../utilities/variables';
+
+.score__wrapper {
+  text-align: center;
+  color: none;
+  font-family: getFontFamily('classic-primary-font');
+  font-weight: 400;
+  box-shadow: none;
+  padding: 0 7px 2px 7px;
+}
+
+@media screen and (min-width: 768px) {
+
+  .score__wrapper {
+    font-size: 30px;
+  }
+}
+
+@media screen and (min-width: 1200px) {
+
+  .score__wrapper {
+    font-size: 30px;
+    padding: 0 13px 4px 13px;
+  }
+}

@@ -1,0 +1,217 @@
+@use '../utilities/variables';
+
+.hint__button {
+  padding: 5px;
+  font-family: getFontFamily('classic-primary-font');
+  font-weight: 400;
+  position: relative;
+  color: none;
+
+  .tooltiptext {
+    visibility: hidden;
+    text-align: center;
+    position: absolute;
+    top: 144%;
+    left: -27%;
+    padding: 9px;
+    color: none;
+    background-color: none;
+    border: 1px solid none;
+
+
+    &:after {
+      content: '';
+      width: 0;
+      height: 0;
+      border-top: 20px solid transparent;
+      border-right: 20px solid transparent;
+      border-left: 20px solid transparent;
+      border-bottom: none;
+      position: absolute;
+      bottom: 100%;
+      left: 50%;
+      margin-left: -20px;
+    }
+  }
+}
+
+.menu-toggle {
+  display: flex;
+  padding: 3px;
+}
+
+.game-controls__list {
+  gap: 10px;
+  display: flex;
+  flex-wrap: wrap;
+  width: 21%;
+  justify-content: space-between;
+}
+
+.game-controls__button {
+  position: relative;
+  padding: 4px 8px;
+  margin: 2px;
+  color: none;
+
+  .tooltiptext {
+    visibility: hidden;
+    color: none;
+    text-align: center;
+    background-color: none;
+    padding: 9px;
+    border: none;
+
+    &:after {
+      content: '';
+      width: 0;
+      height: 0;
+      border-top: 20px solid transparent;
+      border-right: 20px solid transparent;
+      border-bottom: none;
+      border-left: 20px solid transparent;
+      position: absolute;
+      bottom: 100%;
+      left: 50%;
+      margin-left: -20px;
+    }
+  }
+}
+
+.game-controls__button-new-game {
+  .tooltiptext-new-game {
+    position: absolute;
+    top: 157%;
+    right: -80%;
+  }
+}
+
+.game-controls__button-pause {
+  .tooltiptext-pause {
+    position: absolute;
+    top: 157%;
+    right: -124%;
+  }
+}
+
+.game-controls__button-play {
+  .tooltiptext-play {
+    position: absolute;
+    top: 157%;
+    right: -115%;
+  }
+}
+
+.game-controls__button-stop {
+  .tooltiptext-stop {
+    position: absolute;
+    top: 157%;
+    right: -109%;
+  }
+}
+
+.game-menu__btn {
+  position: relative;
+  text-decoration: none;
+  color: none;
+  padding: 3px;
+
+
+  .tooltiptext {
+    visibility: hidden;
+    text-align: center;
+    border-bottom: none;
+    padding: 9px;
+    position: absolute;
+    top: -55%;
+    left: 50%;
+    transform: translate(-50%, -100%);
+    background-color: none;
+    color: none;
+
+    &:after {
+      content: '';
+      width: 0;
+      height: 0;
+      border-right: 20px solid transparent;
+      border-bottom: 20px solid transparent;
+      border-left: 20px solid transparent;
+      border-top: none;
+      margin-left: -20px;
+      position: absolute;
+      top: 100%;
+      left: 50%;
+    }
+  }
+}
+
+.game-menu-toggle__icon {
+  display: block;
+  width: 22px;
+  height: 22px;
+}
+
+
+@media screen and (min-width: 480px) {
+  .menu-toggle__icon {
+    width: 30px;
+    height: 30px;
+  }
+
+  .game-menu-toggle__icon {
+    width: 30px;
+    height: 30px;
+  }
+
+  .game-controls__button {
+    font-size: 20px;
+    padding: 5px;
+  }
+
+  .hint__button {
+    font-size: 20px;
+  }
+}
+
+@media screen and (min-width: 768px) {
+
+  .game-menu__btn:hover .tooltiptext,
+  .game-menu__btn:focus .tooltiptext {
+    visibility: visible;
+  }
+
+
+  .game-controls__button:hover .tooltiptext,
+  .game-controls__button:focus .tooltiptext {
+    visibility: visible;
+  }
+
+  .hint__button:hover .tooltiptext,
+  .hint__button:focus .tooltiptext {
+    visibility: visible;
+  }
+}
+
+@media screen and (min-width: 1200px) {
+
+  .hint__button {
+    font-size: 30px;
+  }
+
+  .game-controls__button {
+    font-size: 30px;
+    padding: 7px;
+  }
+
+  .game-menu-toggle__icon {
+    width: 45px;
+    height: 45px;
+  }
+
+  .game-menu__btn {
+
+    .tooltiptext {
+      font-size: 40px;
+    }
+  }
+}

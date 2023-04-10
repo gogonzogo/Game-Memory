@@ -1,73 +1,217 @@
 @use '../utilities/variables';
 
-.card-gallery__wrapper {
-  background-color: #910000;
-  background-image: url("https://www.transparenttextures.com/patterns/wood-pattern.png");
-  border-radius: 150px;
-  min-width: 230px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  height: 80vh;
+.card__loading-animation {
+  display: none;
+  position: relative;
+  width: 80px;
+  height: 80px;
+  top: 50%;
+  left: 50%;
+  transform: translate(-60%, -68%);
+  z-index: 2;
 }
 
+.card__loading-animation div {
+  display: inline-block;
+  position: absolute;
+  left: 8px;
+  width: 16px;
+  background: #fff;
+  animation: card__loading-animation 1.2s cubic-bezier(0, 0.5, 0.5, 1) infinite;
+}
 
-.card-gallery__container {
-  width: 200px;
-  background-image: linear-gradient(to bottom, #006400, #008000);
-  border-radius: 150px;
+.card__loading-animation div:nth-child(1) {
+  left: 8px;
+  animation-delay: -0.24s;
+}
+
+.card__loading-animation div:nth-child(2) {
+  left: 32px;
+  animation-delay: -0.12s;
+}
+
+.card__loading-animation div:nth-child(3) {
+  left: 56px;
+  animation-delay: 0;
+}
+
+@keyframes card__loading-animation {
+  0% {
+    top: 8px;
+    height: 64px;
+  }
+
+  50%,
+  100% {
+    top: 24px;
+    height: 32px;
+  }
+}
+
+.card-gallery__wrapper {
+  width: 90%;
+  height: 60vh;
+  padding: 20px;
+  box-shadow: none;
+  background-image: none;
+  display: flex;
+  justify-content: center;
+}
+
+.pokemon-logo {
+  display: none;
 }
 
 .card-gallery {
-  display: flex;
   flex-wrap: wrap;
   justify-content: space-evenly;
-  width: 210px;
-  gap: 5px;
-  height: 75vh;
+  display: flex;
+  align-items: center;
+  width: 100%;
+  gap: 10px;
 }
 
+.card__container,
+.card {
+  width: 45px;
+  height: 62px;
+}
 
-.card-container {
-  width: 40px;
-  height: 60px;
-  transform: none;
+.card__img {
+  width: 100%;
+  height: 100%;
 }
 
 .card {
-  position: relative;
+  position: absolute;
+  transform-style: preserve-3d;
+  transition: transform .5s;
+  box-shadow: 0 22px 70px 4px #0000008f;
+}
+
+.card__front,
+.card__back {
+  position: absolute;
   width: 100%;
   height: 100%;
-  transition: transform 3s;
-  transform-style: preserve-3d;
-  box-shadow: 0 0.0625em 0.125em rgba(0, 0, 0, 0.15);
-
-}
-
-.card-img {
-  width: 40px;
-  height: 60px;
-}
-
-.card-front,
-.card-back {
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  right: 0;
   backface-visibility: hidden;
   border-radius: 5px;
 }
 
-.card-front {
-  border-radius: 0.25em;
-  border: 3px solid white;
-  background-color: #f2f2f8;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='8' viewBox='0 0 8 8'%3E%3Cg fill='%23f40000' fill-opacity='1'%3E%3Cpath fill-rule='evenodd' d='M0 0h4v4H0V0zm4 4h4v4H4V4z'/%3E%3C/g%3E%3C/svg%3E");
+.card__front {
+
+  &:hover,
+  &:focus {
+    transform: scale(1.1);
+  }
 }
 
-.card-back {
+.card__back {
   transform: rotateY(180deg);
+  transform-origin: bottom;
+}
 
+.card__matched {
+  animation: moveSpinStack 1.2s ease forwards;
+  z-index: 1;
+  box-shadow: rgba(255, 255, 255, 0.4) 0px 2px 4px, rgba(255, 255, 255, 0.3) 0px 7px 13px -3px, rgba(0, 102, 0) 0px -3px 0px inset;
+}
+
+@keyframes moveSpinStack {
+  0% {
+    transform: rotate(0deg) scale(1);
+  }
+
+  25% {
+    transform: rotate(360deg) scale(2);
+  }
+
+  50% {
+    transform: rotate(720deg) scale(2);
+  }
+
+  75% {
+    transform: rotate(1080deg) scale(2);
+  }
+
+  100% {
+    transform: rotate(1485deg) scale(1);
+    top: 7%;
+    right: 45%;
+  }
+}
+
+@media screen and (min-width: 480px) {
+
+  .card__container,
+  .card,
+  .card__img,
+  .card__front,
+  .card__back {
+    width: 60px;
+    height: 84px;
+  }
+}
+
+@media screen and (min-width: 768px) {
+  .card__loading-animation {
+    transform: translate(-48%, -68%);
+  }
+
+  .card__container,
+  .card,
+  .card__img,
+  .card__front,
+  .card__back {
+    width: 84px;
+    height: 118px;
+  }
+}
+
+@media screen and (min-width: 1200px) {
+
+  .card-gallery__wrapper {
+    height: 50vh;
+  }
+
+  .card__loading-animation {
+    transform: translate(-18%, -68%);
+  }
+
+  .card-gallery {
+    gap: 20px;
+  }
+
+  .card__container,
+  .card,
+  .card__img,
+  .card__front,
+  .card__back {
+    width: 108px;
+    height: 151px;
+  }
+
+  @keyframes moveSpinStack {
+    0% {
+      transform: rotate(0deg) scale(1);
+    }
+
+    25% {
+      transform: rotate(360deg) scale(2);
+    }
+
+    50% {
+      transform: rotate(720deg) scale(2);
+    }
+
+    75% {
+      transform: rotate(1080deg) scale(2);
+    }
+
+    100% {
+      transform: rotate(1480deg) scale(1);
+      top: 4%;
+      right: 45%;
+    }
+  }
 }

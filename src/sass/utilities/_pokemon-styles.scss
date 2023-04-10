@@ -1,0 +1,151 @@
+@use '../utilities/variables';
+
+body,
+.pokemon {
+
+  .game-board__container {
+    background-color: getColor('pokemon-primary-color');
+    background-image: none;
+  }
+
+  .header__section {
+    background-color: getColor('pokemon-secondary-color');
+  }
+
+  .timer__wrapper,
+  .score__wrapper {
+    color: getColor('pokemon-tertiary-color');
+    font-family: getFontFamily('pokemon-secondary-font');
+    box-shadow: rgb(248, 85, 85) 3px 3px 6px 0px inset, rgba(255, 93, 93, 0.5) -3px -3px 6px 1px inset;
+  }
+
+  .card-gallery__wrapper {
+    background-image: linear-gradient(rgb(234, 208, 11), rgb(133, 129, 0));
+    padding: 20px;
+    box-shadow: rgba(255, 0, 0, 0.294) 0px 1px 2px, rgba(255, 0, 0, 0.294) 0px 2px 4px, rgba(255, 0, 0, 0.294) 0px 4px 8px, rgba(255, 0, 0, 0.294) 0px 8px 16px, rgba(255, 0, 0, 0.294) 0px 16px 32px, rgba(255, 0, 0, 0.294) 0px 32px 64px;
+  }
+
+  .pokemon-logo {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    display: block;
+    width: 100%;
+  }
+
+  .card__front-pokemon {
+    background-image: url("/src/images/pokemoncard-back.png");
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: contain;
+    background-color: getColor('marvel-tertiary-color');
+    border-radius: 5px;
+  }
+
+  .card__matched {
+    box-shadow: rgba(255, 0, 0, 0.422) 0px 2px 4px, rgba(255, 0, 0, 0.3) 0px 7px 13px -3px, rgb(102, 0, 0) 0px -3px 0px inset;
+  }
+
+  .footer__section {
+    background-color: getColor('pokemon-secondary-color');
+  }
+
+  .game-controls__button,
+  .hint__button {
+    color: getColor('pokemon-tertiary-color');
+    box-shadow: rgba(255, 0, 0, 0.786) 0px 2px 4px, rgba(255, 0, 0, 0.549) 0px 7px 13px -3px, rgba(255, 0, 0, 0.411) 0px -3px 0px inset;
+
+    &:hover,
+    &:focus {
+      box-shadow: rgba(255, 0, 0, 0.229) 0px 1px 0px, rgba(255, 0, 0, 0.237) 0px 8px 24px, rgba(255, 0, 0, 0.238) 0px 16px 48px;
+    }
+
+    .tooltiptext {
+      color: rgb(252, 234, 146);
+      background-color: #000;
+      border: 1px solid rgb(252, 234, 146);
+
+      &:after {
+        border-bottom: 20px solid #000;
+      }
+    }
+  }
+
+  .game-menu__btn {
+    color: getColor('pokemon-tertiary-color');
+    box-shadow: rgba(255, 0, 0, 0.786) 0px 2px 4px, rgba(255, 0, 0, 0.549) 0px 7px 13px -3px, rgba(255, 0, 0, 0.411) 0px -3px 0px inset;
+
+    &:hover,
+    &:focus {
+      box-shadow: rgba(255, 0, 0, 0.229) 0px 1px 0px, rgba(255, 0, 0, 0.237) 0px 8px 24px, rgba(255, 0, 0, 0.238) 0px 16px 48px;
+    }
+
+
+    &:hover,
+    &:focus {
+      box-shadow: rgba(255, 0, 0, 0.229) 0px 1px 0px, rgba(255, 0, 0, 0.237) 0px 8px 24px, rgba(255, 0, 0, 0.238) 0px 16px 48px;
+    }
+
+    .tooltiptext {
+      color: #fcea92;
+      background-color: #000;
+      border: 1px solid #fcea92;
+
+      &:after {
+        border-top: 20px solid #000;
+      }
+    }
+  }
+
+  .game-menu-toggle__icon {
+    fill: getColor('pokemon-tertiary-color');
+  }
+
+  .page-title__text {
+    color: getColor('pokemon-tertiary-color');
+  }
+
+  .footer__contacts-item {
+    color: getColor('pokemon-tertiary-color');
+  }
+
+  .social-icon {
+    color: getColor('pokemon-tertiary-color');
+  }
+
+  .menu-toggle__open {
+    box-shadow: rgba(255, 0, 0, 0.786) 0px 2px 4px, rgba(255, 0, 0, 0.549) 0px 7px 13px -3px, rgba(255, 0, 0, 0.411) 0px -3px 0px inset;
+
+    &:hover,
+    &:focus {
+      box-shadow: rgba(255, 0, 0, 0.229) 0px 1px 0px, rgba(255, 0, 0, 0.237) 0px 8px 24px, rgba(255, 0, 0, 0.238) 0px 16px 48px;
+    }
+  }
+
+  .menu-toggle__icon-open {
+    fill: getColor('pokemon-tertiary-color');
+  }
+
+  .menu-container {
+    background-color: getColor('pokemon-primary-color');
+  }
+
+  .mobile-menu-content__container {
+    background-color: getColor('pokemon-secondary-color');
+    box-shadow: rgb(205, 210, 104) 0px 20px 30px -10px;
+  }
+
+  .menu-toggle {
+    background-color: getColor('pokemon-secondary-color');
+    color: getColor('primary-text-color');
+  }
+
+  .mobile-menu-contacts__link {
+    color: getColor('primary-text-color');
+  }
+
+  .mobile-social-icon {
+    color: getColor('primary-text-color');
+  }
+}

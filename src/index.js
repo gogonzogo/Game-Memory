@@ -1,100 +1,460 @@
+import { Notify } from "notiflix";
+import MARVEL_API_KEY from "./config";
+
 const refs = {
   cardGallery: document.querySelector('.card-gallery'),
-}
-
-let BASE_URL = 'https://deckofcardsapi.com/api/deck/new/shuffle/?cards=9H,0H,JH,QH,KH,AH,9H,0H,JH,QH,KH,AH,9H,0H,JH,QH,KH,AH,9H,0H,JH,QH,KH,AH';
-let NUMBER_OF_CARDS = 24;
+  timer: document.querySelector(".timer"),
+  resetBtn: document.querySelector(".reset__button"),
+  pauseBtn: document.querySelector(".pause__button"),
+  startBtn: document.querySelector(".start__button"),
+  stopBtn: document.querySelector(".stop__button"),
+  hintBtn: document.querySelector(".hint__button"),
+  styleContainer: document.querySelector(".style__list-container"),
+  styleList: document.querySelectorAll(".style__list-item"),
+  difficultyContainer: document.querySelector(".difficulty__list-container"),
+  difficultyList: document.querySelectorAll(".difficulty__list-item"),
+  playBtn: document.querySelector(".play__button"),
+  continueBtn: document.querySelector(".continue__button"),
+  cardLoadingAnimation: document.querySelector(".card__loading-animation"),
+  modal: document.querySelector(".login-modal__container"),
+  loginBtn: document.querySelector(".open__login-modal"),
+  submitBtn: document.querySelector(".submit__btn"),
+  closeModalBtn: document.querySelector(".login__modal-close"),
+  loginForm: document.querySelector(".login__form"),
+};
+let NUMBER_OF_CARDS = null;
+let CHOSEN_STYLE = null;
+let CLASSIC_CARDS_BASE_URL = `https://deckofcardsapi.com/api/deck/new/shuffle/?deck_count=1`;
+let HALF_SELECTED_CARD_COUNT = null;
+let MARVEL_RANDOM_OFFSET = null;
+let MARVEL_CARDS_BASE_URL = `https://gateway.marvel.com/v1/public/characters?limit=100`;
+let POKEMON_CARDS_BASE_URL = `https://pokeapi.co/api/v2/pokemon/?limit=52&`;
+let POKEMON_RANDOM_OFFSET = null;
 let clickedCards = [];
 let matchedCards = [];
+let startTime;
+let timerInterval;
+let elapsedTime = 0;
+let isPaused = false;
+let zIndex = 1;
+let firstMatchTime = null;
+let totalGameTime = null;
+let lastUsername = null;
+let difficulty = null;
 
-// 2H,3H,4H,5H,6H,7H,8H,9H,10,JH,QH,KH,AH
-// 2H,3H,4H,5H,6H,7H,8H,9H,10,JH,QH,KH,AH
-function onCardClick(e) {
-  let card = e.target.parentNode.classList.contains('card');
-  if (!card) {
-    return;
-  } else {
-    const img = e.target.parentElement.querySelector('.card-img');
-    const imgSrc = img.getAttribute('src');
-    const cardContainer = e.target.closest('.card');
-    cardContainer.style.transform = 'rotateY(.5turn)';
-    clickedCards.push(cardContainer);
-    if (clickedCards.length < 2) {
-      return
-    } else {
-      doCardsMatch(clickedCards[0], clickedCards[1])
+refs.playBtn.disabled = true;
+
+async function getCards() {
+  refs.cardGallery.innerHTML = '';
+  refs.cardLoadingAnimation.style.display = 'inline-block';
+  try {
+    if (CHOSEN_STYLE === 'classic') {
+      const classicCardsFetch = await fetch(`${CLASSIC_CARDS_BASE_URL}`);
+      const classicCardsDeck = await classicCardsFetch.json();
+      const classicCardsDraw = await fetch(`https://deckofcardsapi.com/api/deck/${classicCardsDeck.deck_id}/draw/?count=52`);
+      const classicCards = await classicCardsDraw.json();
+      shuffleDrawCards(classicCards.cards, HALF_SELECTED_CARD_COUNT);
+    } else if (CHOSEN_STYLE === 'marvel') {
+      const marvelCardsFetch = await fetch(`${MARVEL_CARDS_BASE_URL}&offset=${MARVEL_RANDOM_OFFSET}&${MARVEL_API_KEY}`);
+      const marvelCards = await marvelCardsFetch.json();
+      shuffleDrawCards(marvelCards.data.results, HALF_SELECTED_CARD_COUNT);
+    } else if (CHOSEN_STYLE === 'pokemon') {
+      const pokemonCardsFetch = await fetch(`${POKEMON_CARDS_BASE_URL}offset=${POKEMON_RANDOM_OFFSET}`);
+      const pokemonCards = await pokemonCardsFetch.json();
+      const pokemonCardData = pokemonCards.results
+      const pokemonCardImageData = await Promise.all(
+        pokemonCardData.map(async (pokemonCard) => {
+          const detailResponse = await fetch(pokemonCard.url);
+          return detailResponse.json();
+        })
+      );
+      shuffleDrawCards(pokemonCardImageData, HALF_SELECTED_CARD_COUNT);
     };
-  }
+  } catch (error) {
+    console.log(error);
+  };
 };
 
-function doCardsMatch(firstCard, secondCard) {
-  let firstCardImgSrc = firstCard.querySelector('.card-img').getAttribute('src');
-  let secondCardImgSrc = secondCard.querySelector('.card-img').getAttribute('src');
-  if (firstCardImgSrc !== secondCardImgSrc) {
-    setTimeout(() => {
-      firstCard.style.transform = 'none';
-      secondCard.style.transform = 'none';
-    }, 2000);
-    clickedCards.length = 0;
-    return;
-  } else {
-    matchedCards.push(firstCard, secondCard)
-    clickedCards.length = 0;
-    console.log(matchedCards);
-    endOfGame();
-  }
+function shuffleDrawCards(data, numCards) {
+  if (CHOSEN_STYLE === 'marvel') {
+    const filteredCards = data.filter(marvelCard =>
+      !marvelCard.thumbnail.path.includes('image_not_available') &&
+      marvelCard.thumbnail.path !== '' &&
+      marvelCard.thumbnail.extension !== '' &&
+      marvelCard.thumbnail.extension !== 'gif'
+    );
+    const randomIndices = Array.from({ length: filteredCards.length }, (_, i) => i)
+      .sort(() => Math.random() - 0.5);
+    const shuffledMarvelCards = randomIndices.map(i => filteredCards[i]);
+    const selectedMarvelCards = shuffledMarvelCards.slice(0, numCards);
+    const duplicatedMarvelCards = selectedMarvelCards.map(card => ({ ...card }));
+    const drawnMarvelCards = selectedMarvelCards.concat(duplicatedMarvelCards);
+    console.log(drawnMarvelCards);
+    renderCardmarkup(drawnMarvelCards);
+  } else if (CHOSEN_STYLE === 'classic') {
+    const selectedClassicCards = data.slice(0, numCards);
+    const duplicatedClassicCards = selectedClassicCards.map(card => ({ ...card }));
+    const drawnClassicCards = selectedClassicCards.concat(duplicatedClassicCards);
+    for (let i = drawnClassicCards.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [drawnClassicCards[i], drawnClassicCards[j]] = [drawnClassicCards[j], drawnClassicCards[i]];
+    }
+    console.log(drawnClassicCards);
+    renderCardmarkup(drawnClassicCards);
+  } else if (CHOSEN_STYLE === 'pokemon') {
+    const selectedPokemonCards = data.slice(0, numCards);
+    const duplicatedPokemonCards = selectedPokemonCards.map(card => ({ ...card }));
+    const drawnPokemonCards = selectedPokemonCards.concat(duplicatedPokemonCards);
+    for (let i = drawnPokemonCards.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [drawnPokemonCards[i], drawnPokemonCards[j]] = [drawnPokemonCards[j], drawnPokemonCards[i]];
+    }
+    console.log(drawnPokemonCards);
+    renderCardmarkup(drawnPokemonCards);
+  };
 };
 
-function endOfGame() {
-  if (matchedCards.length !== NUMBER_OF_CARDS) {
-    return;
-  } else {
-    console.log('end of game');
-  }
+function getRandomNum() {
+  if (CHOSEN_STYLE === 'marvel') {
+    MARVEL_RANDOM_OFFSET = Math.floor(Math.random() * 1500) + 1;
+  } else if (CHOSEN_STYLE === 'pokemon') {
+    console.log('pokemone random num called');
+    POKEMON_RANDOM_OFFSET = Math.floor(Math.random() * 230) + 1;
+  };
+};
+
+function onPlayBtnClick() {
+  getRandomNum();
+  getCards();
 }
 
+function onStyleClick(e) {
+  CHOSEN_STYLE = e.target.closest('li').dataset.value;
+  if (!e.target.closest('li')) {
+    return;
+  };
+  console.log(`style clicked`);
+  refs.styleList.forEach(item => item.classList.remove('chosen-style'));
+  e.target.closest('li').classList.add('chosen-style');
 
-function getCards() {
-  fetch(`${BASE_URL}`)
-    .then(response => {
-      return response.json();
-    })
-    .then((data) => {
-      let DECK_ID = data.deck_id;
-      let DECK_URL = `https://deckofcardsapi.com/api/deck/${DECK_ID}/draw/?count=${NUMBER_OF_CARDS}`
-      return fetch(`${DECK_URL}`);
-    })
-    .then((response) => {
-      return response.json();
-    })
-    .then((data) => {
-      let cards = data.cards;
-      renderCardmarkup(cards)
-    })
-    .catch((error) => {
-      console.log(error);
-    });
+  if (CHOSEN_STYLE === 'classic') {
+    document.body.classList.remove('pokemon');
+    document.body.classList.remove('marvel');
+    document.body.classList.add('classic');
+  } else if (CHOSEN_STYLE === 'marvel') {
+    document.body.classList.remove('pokemon');
+    document.body.classList.remove('classic');
+    document.body.classList.add('marvel');
+  } else if (CHOSEN_STYLE === 'pokemon') {
+    document.body.classList.remove('marvel');
+    document.body.classList.remove('classic');
+    document.body.classList.add('pokemon');
+  };
+  playBtnEnable();
 };
 
-function cardMarkup(data) {
-  return data.map(card => {
-    return `<li class="card-container">
-        <div class="card">
-          <div class="card-front">
-          </div>
-          <div class="card-back">
-          <img class="card-img" src="${card.image}" width="100"/>
-          </div>
-        </div>
-      </li>`
-  }).join('')
+function onDifficultyClick(e) {
+  if (e.target.nodeName !== 'LI') {
+    return;
+  };
+  refs.difficultyList.forEach(item => item.classList.remove('chosen-difficulty'));
+  NUMBER_OF_CARDS = Number(e.target.dataset.value);
+  HALF_SELECTED_CARD_COUNT = NUMBER_OF_CARDS / 2;
+  difficulty = e.target.textContent;
+  e.target.classList.add('chosen-difficulty');
+  playBtnEnable();
 };
 
 function renderCardmarkup(data) {
   const cardGalleryMarkup = cardMarkup(data);
   refs.cardGallery.insertAdjacentHTML('beforeend', cardGalleryMarkup);
+  refs.cardLoadingAnimation.style.display = 'none';
+  startTimer();
 };
 
-// getCards();
+function cardMarkup(data) {
+  if (CHOSEN_STYLE === 'classic') {
+    return data.map(classicCard => {
+      return `
+      <li class="card__container">
+        <div class="card">
+          <div class="card__front card__front-classic">
+          </div>
+          <div class="card__back">
+          <img class="card__img" src="${classicCard.image}" alt="classic stlye playing card" width="50"/>
+          </div>
+        </div>
+      </li>`
+    }).join('')
+  } else if (CHOSEN_STYLE === 'marvel') {
+    return data.map(marvelCard => {
+      return `
+      <li class="card__container marvel-card__container">
+        <div class="card card__marvel">
+          <div class="card__front card__front-marvel"> 
+          </div>
+          <div class="card__back card__back-marvel">
+            <img src="${marvelCard.thumbnail.path}.${marvelCard.thumbnail.extension}" alt="${marvelCard.name}" width="50" class="card__img card__img-marvel">
+          </div>
+        </div>
+      </li>
+    `;
+    }).join('');
+  } else if (CHOSEN_STYLE === 'pokemon') {
+    return data.map(pokemonCard => {
+      return `
+      <li class="card__container">
+        <div class="card">
+          <div class="card__front card__front-pokemon"> 
+          </div>
+          <div class="card__back">
+              <img src="${pokemonCard.sprites.other.dream_world.front_default}" class="card__img" alt="${pokemonCard.name}"/>
+          </div>
+        </div>
+      </li>
+    `;
+    }).join('');
+  };
+};
+
+function onCardClick(e) {
+  let cardClicked = e.target.parentNode.classList.contains('card');
+  let disabledCard = e.target.parentNode.classList.contains('disabled');
+  if (!cardClicked || disabledCard) {
+    return;
+  };
+  const img = e.target.parentElement.querySelector('.card__img');
+  const imgSrc = img.getAttribute('src');
+  const cardContainer = e.target.closest('.card');
+  cardContainer.style.transform = 'rotateY(.5turn)';
+  clickedCards.push(cardContainer);
+  if (clickedCards.length < 2) {
+    return
+  } else {
+    doCardsMatch(clickedCards[0], clickedCards[1])
+  };
+};
+
+function doCardsMatch(firstCard, secondCard) {
+  let firstCardImgSrc = firstCard.querySelector('.card__img').getAttribute('src');
+  let secondCardImgSrc = secondCard.querySelector('.card__img').getAttribute('src');
+  if (firstCardImgSrc !== secondCardImgSrc) {
+    setTimeout(() => {
+      firstCard.style.transform = 'none';
+      secondCard.style.transform = 'none';
+    }, 1000);
+    clickedCards.length = 0;
+    return;
+  } else if (firstCardImgSrc === secondCardImgSrc) {
+    endOfGame();
+    matchedCardSplits();
+    matchedCards.push(firstCard, secondCard);
+    endOfGame();
+    clickedCards.length = 0;
+    setTimeout(() => {
+      matchedCardsAbsolutePosition(firstCard, secondCard);
+      stackedMatchedCards(firstCard, secondCard);
+      firstCard.classList.add('card__matched');
+      secondCard.classList.add('card__matched');
+    }, 1000);
+  };
+};
+
+function matchedCardsAbsolutePosition(firstCard, secondCard) {
+  const cardBottomDelta = 0;
+  const cardRightDelta = 0;
+
+  const firstCardRect = firstCard.getBoundingClientRect();
+  const secondCardRect = secondCard.getBoundingClientRect();
+
+  const firstCardAbsoluteBottom = window.innerHeight - (firstCardRect.top + firstCardRect.height) - cardBottomDelta;
+  const firstCardAbsoluteRight = window.innerWidth - (firstCardRect.left + firstCardRect.width) - cardRightDelta;
+  const secondCardAbsoluteBottom = window.innerHeight - (secondCardRect.top + secondCardRect.height) - cardBottomDelta;
+  const secondCardAbsoluteRight = window.innerWidth - (secondCardRect.left + secondCardRect.width) - cardRightDelta;
+
+  firstCard.style.position = 'absolute';
+  firstCard.style.bottom = firstCardAbsoluteBottom + 'px';
+  firstCard.style.right = firstCardAbsoluteRight + 'px';
+
+  secondCard.style.position = 'absolute';
+  secondCard.style.bottom = secondCardAbsoluteBottom + 'px';
+  secondCard.style.right = secondCardAbsoluteRight + 'px';
+};
+
+function stackedMatchedCards(firstCard, secondCard) {
+  firstCard.style.zIndex = `${zIndex++}`;
+  secondCard.style.zIndex = `${zIndex++}`;
+};
+
+function matchedCardSplits() {
+  const currentTime = new Date().getTime();
+  const timePassed = currentTime - startTime;
+  const timePassedInSeconds = timePassed / 1000;
+  if (firstMatchTime === null) {
+    firstMatchTime = timePassedInSeconds;
+  }
+  updateUserStats(lastUsername, difficulty, firstMatchTime, totalGameTime);
+};
+
+function endOfGame() {
+  console.log(`end of game called`);
+  console.log(matchedCards.length);
+  console.log(NUMBER_OF_CARDS);
+  if (matchedCards.length !== NUMBER_OF_CARDS) {
+    console.log(`end of game check`);
+    return;
+  } else {
+    stopTimer();
+    Notify.success('You won!');
+    console.log(`end of game success`);
+  };
+};
+
+function onHintBtnClick(e) {
+  if (e.target.nodeName !== 'BUTTON') {
+    return;
+  }
+  const cardList = document.querySelectorAll('.card');
+  cardList.forEach(card => card.style.transform = 'rotateY(.5turn)')
+
+  setTimeout(() => {
+    cardList.forEach(card => card.style.transform = 'none');
+  }, 500);
+};
+
+function playBtnEnable() {
+  if (CHOSEN_STYLE !== null && NUMBER_OF_CARDS !== null) {
+    refs.playBtn.disabled = false;
+  };
+}
+
+function submitForm(e) {
+  e.preventDefault();
+  refs.modal.style.display = "none";
+  const formData = new FormData(refs.loginForm);
+  const data = Object.fromEntries(formData);
+  const username = data.uname;
+  lastUsername = username;
+  refs.loginForm.reset();
+};
+
+function updateUserStats(lastUsername, difficulty, firstMatchTime, totalGameTime) {
+  if (lastUsername === null) {
+    return;
+  }
+  const userStats = JSON.parse(localStorage.getItem(lastUsername)) || {};
+  if (!userStats[difficulty]) {
+    userStats[difficulty] = {
+      fastestTimeToMatch: firstMatchTime,
+      longestTimeToMatch: firstMatchTime,
+      fastestTotalGameTime: totalGameTime,
+      longestTotalGameTime: totalGameTime
+    };
+  } else {
+    if (firstMatchTime < userStats[difficulty].fastestTimeToMatch || userStats[difficulty].fastestTimeToMatch === null) {
+      userStats[difficulty].fastestTimeToMatch = firstMatchTime;
+    }
+    if (firstMatchTime > userStats[difficulty].longestTimeToMatch || userStats[difficulty].longestTimeToMatch === null) {
+      userStats[difficulty].longestTimeToMatch = firstMatchTime;
+    }
+    if (totalGameTime < userStats[difficulty].fastestTotalGameTime || userStats[difficulty].fastestTotalGameTime === null) {
+      userStats[difficulty].fastestTotalGameTime = totalGameTime;
+    }
+    if (totalGameTime > userStats[difficulty].longestTotalGameTime || userStats[difficulty].longestTotalGameTime === null) {
+      userStats[difficulty].longestTotalGameTime = totalGameTime;
+    }
+  }
+  localStorage.setItem(lastUsername, JSON.stringify(userStats));
+};
+
+function resetGame(e) {
+  stopTimer();
+  getCards();
+};
+
+function pauseGame() {
+  const cardList = document.querySelectorAll('.card');
+  clearInterval(timerInterval);
+  elapsedTime = Date.now() - startTime.getTime();
+  isPaused = true;
+  cardList.forEach(card => card.classList.add('disabled'));
+  refs.hintBtn.disabled = true;
+};
+
+function startTimer() {
+  if (!isPaused) {
+    startTime = new Date();
+  } else {
+    startTime = new Date(Date.now() - elapsedTime);
+  }
+  timerInterval = setInterval(() => {
+    elapsedTime = Date.now() - startTime.getTime();
+    const minutes = Math.floor((elapsedTime / 1000 / 60) % 60);
+    const seconds = Math.floor((elapsedTime / 1000) % 60);
+    refs.timer.innerHTML = addLeaderingZero(minutes) + ":" + addLeaderingZero(seconds);
+  }, 1000);
+};
+
+function continueGame(e) {
+  const cardList = document.querySelectorAll('.card');
+  if (e.target === refs.startBtn) {
+    cardList.forEach(card => card.classList.remove('disabled'));
+    startTimer();
+    refs.hintBtn.disabled = false;
+  };
+};
+
+function stopTimer() {
+  clearInterval(timerInterval);
+  let currentTime = new Date().getTime();
+  totalGameTime = ((currentTime - startTime) / 1000) % 60;
+  updateUserStats(lastUsername, difficulty, firstMatchTime, totalGameTime);
+  refs.timer.innerHTML = '00:00';
+};
+
+function stopGame(e) {
+  if (e.target === refs.stopBtn) {
+    stopTimer();
+    refs.cardGallery.innerHTML = '';
+  };
+};
+
+function addLeaderingZero(time) {
+  if (time < 10) {
+    return "0" + time;
+  } else {
+    return time;
+  };
+};
+
+function loginModalClick(e) {
+  if (e.target === refs.loginBtn) {
+    refs.modal.style.display = 'flex';
+  }
+};
+
+function closeModal(e) {
+  if (e.target === refs.closeModalBtn) {
+    refs.modal.style.display = 'none';
+  }
+};
+
+function modalOutsideClick(e) {
+  if (e.target == refs.modal) {
+    refs.modal.style.display = 'none';
+  }
+};
 
 refs.cardGallery.addEventListener('click', onCardClick);
+refs.resetBtn.addEventListener('click', resetGame);
+refs.pauseBtn.addEventListener('click', pauseGame);
+refs.startBtn.addEventListener('click', continueGame);
+refs.stopBtn.addEventListener('click', stopGame);
+refs.difficultyContainer.addEventListener('click', onDifficultyClick);
+refs.styleContainer.addEventListener('click', onStyleClick);
+refs.playBtn.addEventListener('click', onPlayBtnClick);
+window.addEventListener('click', modalOutsideClick);
+refs.loginBtn.addEventListener('click', loginModalClick);
+refs.closeModalBtn.addEventListener('click', closeModal);
+refs.submitBtn.addEventListener("click", submitForm);
+refs.hintBtn.addEventListener('click', onHintBtnClick);
