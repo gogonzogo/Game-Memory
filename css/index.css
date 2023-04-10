@@ -711,7 +711,7 @@ body .mobile-social-icon,
 
 .game-board__container {
   width: 100vw;
-  height: 90%;
+  height: 100%;
   background-color: none;
   background-image: none;
 }
