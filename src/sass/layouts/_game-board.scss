@@ -9,7 +9,7 @@
   bottom: 0;
   left: 0;
   width: 100vw;
-  height: 100vh;
+  height: 100vmax;
   z-index: 1000;
   transform: translateY(100%);
   transition: variables.$transition-time variables.$transition-time-function;
@@ -20,7 +20,7 @@
 
 .game-board__container {
   width: 100vw;
-  height: 100vh;
+  height: 90%;
   background-color: none;
   background-image: none;
 }
