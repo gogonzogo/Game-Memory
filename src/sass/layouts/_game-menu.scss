@@ -14,6 +14,11 @@
   font-size: getFontSize('xxx-large-font');
   color: black;
   text-align: center;
+  margin: 20px;
+}
+
+.difficulty__container {
+  margin-bottom: 20px;
 }
 
 .difficulty__list-title {
@@ -59,6 +64,10 @@
       background-color: red;
       text-align: center;
     }
+}
+
+.style__list-container {
+  margin-bottom: 30px;
 }
 
 .style__list-title {
@@ -124,8 +133,7 @@
   align-items: center;
 }
 
-.play__button,
-.continue__button {
+.play__button{
   font-family: getFontFamily('primary-font');
   font-size: getFontSize('medium-font');
   border: 1px solid black;
@@ -133,16 +141,12 @@
   padding: 4px;
   cursor: pointer;
   transition: 0.3s;
+  margin-bottom: 30px;
 
   &:hover {
     scale: 1.1;
   }
 }
-
-.play__button {
-  margin-bottom: 10px;
-}
-
 
 .page__secondary-title {
   font-family: getFontFamily('primary-font');

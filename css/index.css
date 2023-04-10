@@ -735,6 +735,11 @@ body .mobile-social-icon,
   font-size: 22px;
   color: black;
   text-align: center;
+  margin: 20px;
+}
+
+.difficulty__container {
+  margin-bottom: 20px;
 }
 
 .difficulty__list-title {
@@ -775,6 +780,10 @@ body .mobile-social-icon,
   border: 1px solid black;
   background-color: red;
   text-align: center;
+}
+
+.style__list-container {
+  margin-bottom: 30px;
 }
 
 .style__list-title {
@@ -833,8 +842,7 @@ body .mobile-social-icon,
   align-items: center;
 }
 
-.play__button,
-.continue__button {
+.play__button {
   font-family: "Sedgwick Ave Display";
   font-size: 14px;
   border: 1px solid black;
@@ -842,14 +850,10 @@ body .mobile-social-icon,
   padding: 4px;
   cursor: pointer;
   transition: 0.3s;
+  margin-bottom: 30px;
 }
-.play__button:hover,
-.continue__button:hover {
+.play__button:hover {
   scale: 1.1;
-}
-
-.play__button {
-  margin-bottom: 10px;
 }
 
 .page__secondary-title {
@@ -1236,7 +1240,7 @@ input[type=password] {
   background-color: #04AA6D;
   color: white;
   padding: 14px 20px;
-  margin: 8px 0;
+  margin: 15px 0;
   border: none;
   cursor: pointer;
   width: 100%;

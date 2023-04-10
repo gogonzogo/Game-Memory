@@ -22,6 +22,14 @@ const refs = {
   closeModalBtn: document.querySelector(".login__modal-close"),
   loginForm: document.querySelector(".login__form"),
 };
+const buttonClickSound = new Audio();
+buttonClickSound.src = './assets/sounds/button-click.mp3';
+
+const cardFlipSound = new Audio();
+cardFlipSound.src = '../assets/sounds/card-flip.mp3';
+
+const cardMatchSound = new Audio();
+cardMatchSound.src = './assets/sounds/card-match.mp3';
 let NUMBER_OF_CARDS = null;
 let CHOSEN_STYLE = null;
 let HALF_SELECTED_CARD_COUNT = null;
@@ -224,6 +232,7 @@ function onCardClick(e) {
   if (!cardClicked || disabledCard) {
     return;
   };
+  cardFlipSound.play();
   const img = e.target.parentElement.querySelector('.card__img');
   const imgSrc = img.getAttribute('src');
   const cardContainer = e.target.closest('.card');
