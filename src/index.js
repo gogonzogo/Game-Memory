@@ -1,5 +1,4 @@
 import { Notify } from "notiflix";
-import MARVEL_API_KEY from "./config";
 
 const refs = {
   cardGallery: document.querySelector('.card-gallery'),
@@ -24,8 +23,9 @@ const refs = {
 };
 let NUMBER_OF_CARDS = null;
 let CHOSEN_STYLE = null;
-let CLASSIC_CARDS_BASE_URL = `https://deckofcardsapi.com/api/deck/new/shuffle/?deck_count=1`;
 let HALF_SELECTED_CARD_COUNT = null;
+let CLASSIC_CARDS_BASE_URL = `https://deckofcardsapi.com/api/deck/new/shuffle/?deck_count=1`;
+let MARVEL_API_KEY = `ts=1&apikey=d8596d8ee4bccb85f124f5d8d10d70c6&hash=0f06deeb86b37aee2ba98815568fbf68`;
 let MARVEL_RANDOM_OFFSET = null;
 let MARVEL_CARDS_BASE_URL = `https://gateway.marvel.com/v1/public/characters?limit=100`;
 let POKEMON_CARDS_BASE_URL = `https://pokeapi.co/api/v2/pokemon/?limit=52&`;
