@@ -522,7 +522,6 @@ body .mobile-social-icon,
 }
 .card-gallery__wrapper {
   width: 90%;
-  height: 60vh;
   padding: 20px;
   box-shadow: none;
   background-image: none;
@@ -725,7 +724,7 @@ body .mobile-social-icon,
   flex-direction: column;
   justify-content: space-evenly;
   align-items: center;
-  height: 100vh;
+  height: 95vh;
   padding: 0 10px;
 }
 
@@ -1431,7 +1430,7 @@ button:hover, button:focus {
 
 .main__section {
   width: 100%;
-  height: 75%;
+  height: 90%;
   display: flex;
   justify-content: center;
   align-items: center;
