@@ -1,5 +1,3 @@
-import { Notify } from "notiflix";
-
 const refs = {
   gameMenuBtn: document.querySelector(".game-menu__btn"),
   cardGallery: document.querySelector('.card-gallery'),
@@ -7,7 +5,9 @@ const refs = {
   score: document.querySelector(".score"),
   statsModal: document.querySelector(".stats-modal"),
   statsContainer: document.querySelector(".stats__container"),
+  statsTitle: document.querySelector(".stats__title"),
   closeStatsModalBtn: document.querySelector(".stats__modal-close"),
+  clearStatHistoryBtn: document.querySelector(".btn__clear-stats-memory"),
   resetBtn: document.querySelector(".reset__button"),
   pauseBtn: document.querySelector(".pause__button"),
   startBtn: document.querySelector(".start__button"),
@@ -47,7 +47,7 @@ let isPaused = false;
 let zIndex = 1;
 let firstMatchTime = null;
 let totalGameTime = null;
-let lastUsername = null;
+let lastUsername = `Guest ${getRandomNum()}, login to save your stats!`;
 let difficulty = null;
 let score = 0;
 let userStats = [];
@@ -56,6 +56,9 @@ refs.continueBtn.disabled = true;
 
 async function getCards() {
   refs.cardGallery.innerHTML = '';
+  refs.timer.innerHTML = '00:00';
+  refs.score.innerHTML = '0';
+  refs.statsModal.style.display = 'none';
   refs.playBtn.disabled = true;
   refs.continueBtn.disabled = false;
   refs.difficultyList.forEach(difficulty => difficulty.classList.add('disabled'));
@@ -103,7 +106,6 @@ function shuffleDrawCards(data, numCards) {
     const selectedMarvelCards = shuffledMarvelCards.slice(0, numCards);
     const duplicatedMarvelCards = selectedMarvelCards.map(card => ({ ...card }));
     const drawnMarvelCards = selectedMarvelCards.concat(duplicatedMarvelCards);
-    console.log(drawnMarvelCards);
     renderCardmarkup(drawnMarvelCards);
   } else if (CHOSEN_STYLE === 'classic') {
     const selectedClassicCards = data.slice(0, numCards);
@@ -113,7 +115,6 @@ function shuffleDrawCards(data, numCards) {
       const j = Math.floor(Math.random() * (i + 1));
       [drawnClassicCards[i], drawnClassicCards[j]] = [drawnClassicCards[j], drawnClassicCards[i]];
     }
-    console.log(drawnClassicCards);
     renderCardmarkup(drawnClassicCards);
   } else if (CHOSEN_STYLE === 'pokemon') {
     const selectedPokemonCards = data.slice(0, numCards);
@@ -123,7 +124,6 @@ function shuffleDrawCards(data, numCards) {
       const j = Math.floor(Math.random() * (i + 1));
       [drawnPokemonCards[i], drawnPokemonCards[j]] = [drawnPokemonCards[j], drawnPokemonCards[i]];
     }
-    console.log(drawnPokemonCards);
     renderCardmarkup(drawnPokemonCards);
   };
 };
@@ -132,8 +132,9 @@ function getRandomNum() {
   if (CHOSEN_STYLE === 'marvel') {
     MARVEL_RANDOM_OFFSET = Math.floor(Math.random() * 1500) + 1;
   } else if (CHOSEN_STYLE === 'pokemon') {
-    console.log('pokemone random num called');
     POKEMON_RANDOM_OFFSET = Math.floor(Math.random() * 230) + 1;
+  } else {
+    return Math.floor(Math.random() * 10000) + 1;
   };
 };
 
@@ -307,27 +308,6 @@ function stackedMatchedCards(firstCard, secondCard) {
   secondCard.style.zIndex = `${zIndex++}`;
 };
 
-function matchedCardSplits() {
-  const currentTime = new Date().getTime();
-  const timePassed = currentTime - startTime;
-  const timePassedInSeconds = timePassed / 1000;
-  if (firstMatchTime === null) {
-    firstMatchTime = timePassedInSeconds;
-  }
-  updateUserStats(lastUsername, difficulty, firstMatchTime, totalGameTime);
-};
-
-function endOfGame() {
-  if (matchedCards.length !== NUMBER_OF_CARDS) {
-    return;
-  } else {
-    console.log(lastUsername, difficulty, firstMatchTime, totalGameTime, score);
-    updateUserStats(lastUsername, difficulty, firstMatchTime, totalGameTime, score);
-    stopGame();
-    Notify.success('You won!');
-  };
-};
-
 function scoreKeeper(score) {
   refs.score.textContent = score;
 };
@@ -362,67 +342,84 @@ function submitForm(e) {
   refs.loginForm.reset();
 };
 
-function updateUserStats(lastUsername, difficulty, firstMatchTime, totalGameTime, score) {
-  if (lastUsername === null) {
-    return;
+function matchedCardSplits() {
+  const currentTime = new Date().getTime();
+  const timePassed = currentTime - startTime;
+  const timePassedInSeconds = timePassed / 1000;
+  if (firstMatchTime === null) {
+    firstMatchTime = timePassedInSeconds;
   }
+  updateUserStats(lastUsername, difficulty, firstMatchTime, totalGameTime, score);
+};
+
+function endOfGame() {
+  if (matchedCards.length !== NUMBER_OF_CARDS) {
+    return;
+  } else {
+    updateUserStats(lastUsername, difficulty, firstMatchTime, totalGameTime, score);
+    stopGame();
+    renderStats();
+  };
+};
+
+function updateUserStats(lastUsername, difficulty, firstMatchTime, totalGameTime, score) {
   const userStats = JSON.parse(localStorage.getItem(lastUsername)) || {};
   if (!userStats[difficulty]) {
     userStats[difficulty] = {
-      fastestTimeToMatch: firstMatchTime,
-      longestTimeToMatch: firstMatchTime,
-      fastestTotalGameTime: totalGameTime,
-      longestTotalGameTime: totalGameTime,
-      highestScore: score,
+      fastestTimeToMatch: firstMatchTime ? firstMatchTime.toFixed(2) : "NO STATS",
+      longestTimeToMatch: firstMatchTime ? firstMatchTime.toFixed(2) : "NO STATS",
+      fastestTotalGameTime: totalGameTime ? totalGameTime.toFixed(2) : "NO STATS",
+      longestTotalGameTime: totalGameTime ? totalGameTime.toFixed(2) : "NO STATS",
+      highestScore: score
     };
   } else {
-    if (firstMatchTime < userStats[difficulty].fastestTimeToMatch || userStats[difficulty].fastestTimeToMatch === null) {
-      userStats[difficulty].fastestTimeToMatch = firstMatchTime;
+    if (firstMatchTime && (firstMatchTime < userStats[difficulty].fastestTimeToMatch || userStats[difficulty].fastestTimeToMatch === "NO STATS")) {
+      userStats[difficulty].fastestTimeToMatch = firstMatchTime.toFixed(2);
     }
-    if (firstMatchTime > userStats[difficulty].longestTimeToMatch || userStats[difficulty].longestTimeToMatch === null) {
-      userStats[difficulty].longestTimeToMatch = firstMatchTime;
+    if (firstMatchTime && (firstMatchTime > userStats[difficulty].longestTimeToMatch || userStats[difficulty].longestTimeToMatch === "NO STATS")) {
+      userStats[difficulty].longestTimeToMatch = firstMatchTime.toFixed(2);
     }
-    if (totalGameTime < userStats[difficulty].fastestTotalGameTime || userStats[difficulty].fastestTotalGameTime === null) {
-      userStats[difficulty].fastestTotalGameTime = totalGameTime;
+    if (totalGameTime && (totalGameTime < userStats[difficulty].fastestTotalGameTime || userStats[difficulty].fastestTotalGameTime === "NO STATS")) {
+      userStats[difficulty].fastestTotalGameTime = totalGameTime.toFixed(2);
     }
-    if (totalGameTime > userStats[difficulty].longestTotalGameTime || userStats[difficulty].longestTotalGameTime === null) {
-      userStats[difficulty].longestTotalGameTime = totalGameTime;
+    if (totalGameTime && (totalGameTime > userStats[difficulty].longestTotalGameTime || userStats[difficulty].longestTotalGameTime === "NO STATS")) {
+      userStats[difficulty].longestTotalGameTime = totalGameTime.toFixed(2);
     }
     if (score > userStats[difficulty].highestScore || userStats[difficulty].highestScore === null) {
       userStats[difficulty].highestScore = score;
     }
   }
+  // Replace any null values with "NO STATS"
+  for (const [key, value] of Object.entries(userStats[difficulty])) {
+    if (value === null) {
+      userStats[difficulty][key] = "NO STATS";
+    }
+  }
   localStorage.setItem(lastUsername, JSON.stringify(userStats));
-};
+}
 
 function markupStats() {
-  console.log(`markup stats and render called`);
   const currentUserStats = JSON.parse(localStorage.getItem(lastUsername));
-  console.log(currentUserStats);
-  // const userStatsMarkup = currentUserStats.map(userStats => {
-  //   const markup = `
-  //     <div>
-  //       <h2>Game Stats for ${lastUsername}</h2>
-  //       <ul>
-  //         <li>Difficulty: ${difficulty}</li>
-  //         <li>Fastest Time to Match: ${userStats[difficulty].fastestTimeToMatch}</li>
-  //         <li>Longest Time to Match: ${userStats[difficulty].longestTimeToMatch}</li>
-  //         <li>Fastest Total Game Time: ${userStats[difficulty].fastestTotalGameTime}</li>
-  //         <li>Longest Total Game Time: ${userStats[difficulty].longestTotalGameTime}</li>
-  //         <li>Highest Score: ${userStats[difficulty].highestScore}</li>
-  //       </ul>
-  //     </div>
-  //   `;
-  //   return markup;
-  // });
+  const markup = `
+    <div class="user-stats__list-container">
+      <h4 class="user-stats__title">${lastUsername}</h4>
+      <ul class="user-stats__list">
+        <li class="user-stats__item">Difficulty: ${difficulty}</li>
+        <li class="user-stats__item">Fastest Time to Match: ${currentUserStats[difficulty].fastestTimeToMatch}</li>
+        <li class="user-stats__item">Longest Time to Match: ${currentUserStats[difficulty].longestTimeToMatch}</li>
+        <li class="user-stats__item">Fastest Total Game Time: ${currentUserStats[difficulty].fastestTotalGameTime}</li>
+        <li class="user-stats__item">Longest Total Game Time: ${currentUserStats[difficulty].longestTotalGameTime}</li>
+        <li class="user-stats__item">Highest Score: ${currentUserStats[difficulty].highestScore}</li>
+      </ul>
+    </div>
+  `;
+  return markup;
 };
 
 function renderStats() {
-  console.log(`render stats called`);
   const markup = markupStats();
-  // refs.statsContainer.innerHTML = markup;
+  refs.statsContainer.innerHTML = markup;
 };
-
 
 function resetGame(e) {
   if (!e.target.classList.contains('reset__button')) {
@@ -489,13 +486,12 @@ function stopGame(e = null) {
   refs.styleList.forEach(style => style.classList.remove('disabled'));
   refs.difficultyList.forEach(difficulty => difficulty.classList.remove('chosen-difficulty'));
   refs.styleList.forEach(style => style.classList.remove('chosen-style'));
-  refs.statsModal.style.display = 'flex';
   refs.continueBtn.disabled = true;
-  refs.timer.innerHTML = '00:00';
-  refs.score.innerHTML = '0';
   matchedCards = [];
   score = 0;
-  markupStats();
+  setTimeout(() => {
+    refs.statsModal.style.display = 'flex';
+  }, 1000);
 };
 
 function addLeaderingZero(time) {
@@ -530,10 +526,8 @@ function onGameMenuClick(e) {
   if (e.target.closest('BUTTON')) {
     refs.buttonClickSound.play();
     if (!isPaused) {
-      console.log(`is paused false check`);
       pauseGame(e);
     } else if (isPaused) {
-      console.log(`is paused true check`);
       isPaused = false;
       pauseGame(e);
     };
@@ -544,6 +538,15 @@ function closeStatsModal(e) {
   if (e.target === refs.closeStatsModalBtn) {
     refs.buttonClickSound.play();
     refs.statsModal.style.display = 'none';
+  };
+};
+
+function clearStatsHistory(e) {
+  if (e.target === refs.clearStatHistoryBtn) {
+    refs.buttonClickSound.play();
+    localStorage.clear();
+    refs.statsContainer.innerHTML = '';
+    refs.statsTitle.innerHTML = 'All stats earased!'
   };
 };
 
@@ -562,3 +565,4 @@ refs.submitBtn.addEventListener("click", submitForm);
 refs.hintBtn.addEventListener('click', onHintBtnClick);
 refs.gameMenuBtn.addEventListener('click', onGameMenuClick);
 refs.closeStatsModalBtn.addEventListener('click', closeStatsModal);
+refs.clearStatHistoryBtn.addEventListener('click', clearStatsHistory);

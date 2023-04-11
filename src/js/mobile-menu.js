@@ -7,6 +7,7 @@
   const closeMenuBtn = document.querySelector('.js-close-menu');
   const closeGameBoardBtn = document.querySelector('.js-open-game-menu');
   const stopGameBtn = document.querySelector('.js-stop-game');
+  const closeStatsModal = document.querySelector('.js-close-stats-modal');
 
   const toggleMenu = () => {
     const isMenuOpen =
@@ -38,6 +39,7 @@
   closeGameBoardBtn.addEventListener('click', toggleGameBoard);
   stopGameBtn.addEventListener('click', toggleGameBoard);
   continueGameBtn.addEventListener('click', toggleGameBoard);
+  closeStatsModal.addEventListener('click', toggleGameBoard);
 
 
   // Close the mobile menu on wider screens if the device orientation changes

@@ -134,7 +134,8 @@
 }
 
 .play__button,
-.continue__button{
+.continue__button,
+.open__login-modal{
   font-family: getFontFamily('primary-font');
   font-size: getFontSize('medium-font');
   border: 1px solid black;

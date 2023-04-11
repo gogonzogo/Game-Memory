@@ -5,6 +5,7 @@ $uppercase: text-transform uppercase;
 $colors: (
   'classic-primary-color': rgb(250, 208, 0),
   'classic-secondary-color': rgb(0, 0, 0),
+  'classic-tertiary-color': rgb(80, 154, 11),
   'marvel-primary-color': rgb(255, 0, 0),
   'marvel-secondary-color': rgb(255, 255, 0),
   'marvel-tertiary-color': rgb(0, 0, 0),
@@ -12,7 +13,6 @@ $colors: (
   'pokemon-secondary-color': rgb(220, 196, 14),
   'pokemon-tertiary-color': rgb(0, 0, 0),
   'pokemon-quaternary-color': rgb(255, 0, 0),
-  'primary-hover-color': rgb(252, 234, 146),
   'primary-accent-color-opaque': rgba(189, 205, 214, 0.6),
   'ternary-color': rgb(238, 233, 218),
   'secondary-btn-color': rgba(124, 171, 197, 0.6),
