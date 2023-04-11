@@ -1,36 +1,8 @@
 @use '../utilities/variables';
 
 
-input[type=text],
-input[type=password] {
-  width: 100%;
-  padding: 12px 20px;
-  margin: 8px 0;
-  display: inline-block;
-  border: 1px solid #ccc;
-  box-sizing: border-box;
-}
 
-.open__login-modal,
-.submit__btn {
-  background-color: #04AA6D;
-  color: white;
-  padding: 14px 20px;
-  margin: 15px 0;
-  border: none;
-  cursor: pointer;
-  width: 100%;
-
-  &:hover {
-    opacity: 0.8;
-  }
-}
-
-.form-label__container {
-  padding: 16px;
-}
-
-.modal {
+.stats-modal {
   display: none;
   position: fixed;
   z-index: 1;
@@ -45,19 +17,9 @@ input[type=password] {
   justify-content: center;
 }
 
-.login__form {
-  position: relative;
-  background-color: #fefefe;
-  border: 1px solid #888;
-  width: 80%;
-}
-
-.login__modal-close {
-  position: absolute;
-  right: 8px;
-  top: -10px;
-  color: #000;
-  font-size: 35px;
+.stats__modal-close {
+  color: #ff0000;
+  font-size: 100px;
   font-weight: bold;
 
   &:hover,

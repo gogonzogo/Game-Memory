@@ -133,7 +133,8 @@
   align-items: center;
 }
 
-.play__button{
+.play__button,
+.continue__button{
   font-family: getFontFamily('primary-font');
   font-size: getFontSize('medium-font');
   border: 1px solid black;

@@ -35,6 +35,8 @@
   </div>
   <div class="game-buttons__wrapper">
     <button class="play__button game-toggle js-open-game" aria-expanded="false" aria-controls="game">Play</button>
+    <button class="continue__button game-toggle js-continue-game" aria-expanded="false"
+      aria-controls="game">Continue</button>
   </div>
   <div class="game-menu__footer">
     <div>
@@ -45,10 +47,9 @@
 <div class="login-modal__container modal">
   <form class="login__form animate">
     <div class="imgcontainer">
-      <span class="login__modal-close" title="Close Modal">&times;</span>
-      <!-- <img src="img_avatar2.png" alt="Avatar" class="avatar"> -->
+      <span class="login__modal-close">&times;</span>
     </div>
-    <div class="container">
+    <div class="form-label__container">
       <label for="uname"></label>
       <input type="text" placeholder="Enter Username" name="uname" required>
 
@@ -59,4 +60,14 @@
     </div>
   </form>
 </div>
-<script defer src="./js/mobile-menu.js" type="module"></script>
+<div class="stats-modal__container stats-modal">
+    <span class="stats__modal-close">&times;</span>
+  <div class="stats__content-container">
+    <div class="stats__title-container">
+      <p class="stats__title"></p>
+    </div>
+    <div class="stats__container">
+      
+    </div>
+  </div>
+  <script defer src="./js/mobile-menu.js" type="module"></script>

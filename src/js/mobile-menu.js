@@ -3,6 +3,7 @@
   const gameBoard = document.querySelector('.js-game-container');
   const openMenuBtn = document.querySelector('.js-open-menu');
   const openGameBoardBtn = document.querySelector('.js-open-game');
+  const continueGameBtn = document.querySelector('.js-continue-game');
   const closeMenuBtn = document.querySelector('.js-close-menu');
   const closeGameBoardBtn = document.querySelector('.js-open-game-menu');
   const stopGameBtn = document.querySelector('.js-stop-game');
@@ -36,6 +37,7 @@
   openGameBoardBtn.addEventListener('click', toggleGameBoard);
   closeGameBoardBtn.addEventListener('click', toggleGameBoard);
   stopGameBtn.addEventListener('click', toggleGameBoard);
+  continueGameBtn.addEventListener('click', toggleGameBoard);
 
 
   // Close the mobile menu on wider screens if the device orientation changes

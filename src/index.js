@@ -1,9 +1,13 @@
 import { Notify } from "notiflix";
 
 const refs = {
+  gameMenuBtn: document.querySelector(".game-menu__btn"),
   cardGallery: document.querySelector('.card-gallery'),
   timer: document.querySelector(".timer"),
   score: document.querySelector(".score"),
+  statsModal: document.querySelector(".stats-modal"),
+  statsContainer: document.querySelector(".stats__container"),
+  closeStatsModalBtn: document.querySelector(".stats__modal-close"),
   resetBtn: document.querySelector(".reset__button"),
   pauseBtn: document.querySelector(".pause__button"),
   startBtn: document.querySelector(".start__button"),
@@ -46,10 +50,16 @@ let totalGameTime = null;
 let lastUsername = null;
 let difficulty = null;
 let score = 0;
+let userStats = [];
 refs.playBtn.disabled = true;
+refs.continueBtn.disabled = true;
 
 async function getCards() {
   refs.cardGallery.innerHTML = '';
+  refs.playBtn.disabled = true;
+  refs.continueBtn.disabled = false;
+  refs.difficultyList.forEach(difficulty => difficulty.classList.add('disabled'));
+  refs.styleList.forEach(style => style.classList.add('disabled'));
   refs.cardLoadingAnimation.style.display = 'inline-block';
   try {
     if (CHOSEN_STYLE === 'classic') {
@@ -135,11 +145,11 @@ function onPlayBtnClick() {
 
 function onStyleClick(e) {
   CHOSEN_STYLE = e.target.closest('li').dataset.value;
-  if (!e.target.closest('li')) {
+  const closestLi = e.target.closest('li');
+  if (!closestLi || closestLi.classList.contains('disabled')) {
     return;
   };
   refs.buttonClickSound.play();
-  console.log(`style clicked`);
   refs.styleList.forEach(item => item.classList.remove('chosen-style'));
   e.target.closest('li').classList.add('chosen-style');
 
@@ -160,7 +170,7 @@ function onStyleClick(e) {
 };
 
 function onDifficultyClick(e) {
-  if (e.target.nodeName !== 'LI') {
+  if (e.target.nodeName !== 'LI' || e.target.classList.contains('disabled')) {
     return;
   };
   refs.buttonClickSound.play();
@@ -385,6 +395,35 @@ function updateUserStats(lastUsername, difficulty, firstMatchTime, totalGameTime
   localStorage.setItem(lastUsername, JSON.stringify(userStats));
 };
 
+function markupStats() {
+  console.log(`markup stats and render called`);
+  const currentUserStats = JSON.parse(localStorage.getItem(lastUsername));
+  console.log(currentUserStats);
+  // const userStatsMarkup = currentUserStats.map(userStats => {
+  //   const markup = `
+  //     <div>
+  //       <h2>Game Stats for ${lastUsername}</h2>
+  //       <ul>
+  //         <li>Difficulty: ${difficulty}</li>
+  //         <li>Fastest Time to Match: ${userStats[difficulty].fastestTimeToMatch}</li>
+  //         <li>Longest Time to Match: ${userStats[difficulty].longestTimeToMatch}</li>
+  //         <li>Fastest Total Game Time: ${userStats[difficulty].fastestTotalGameTime}</li>
+  //         <li>Longest Total Game Time: ${userStats[difficulty].longestTotalGameTime}</li>
+  //         <li>Highest Score: ${userStats[difficulty].highestScore}</li>
+  //       </ul>
+  //     </div>
+  //   `;
+  //   return markup;
+  // });
+};
+
+function renderStats() {
+  console.log(`render stats called`);
+  const markup = markupStats();
+  // refs.statsContainer.innerHTML = markup;
+};
+
+
 function resetGame(e) {
   if (!e.target.classList.contains('reset__button')) {
     return;
@@ -395,17 +434,22 @@ function resetGame(e) {
 };
 
 function pauseGame(e) {
-  if (isPaused) {
-    return;
-  } else if (e.target.classList.contains('pause__button')) {
-  }
-  refs.buttonClickSound.play();
-  const cardList = document.querySelectorAll('.card');
-  clearInterval(timerInterval);
-  elapsedTime = Date.now() - startTime.getTime();
-  isPaused = true;
-  cardList.forEach(card => card.classList.add('disabled'));
-  refs.hintBtn.disabled = true;
+  if (e.target.classList.contains('pause__button') || !isPaused) {
+    refs.buttonClickSound.play();
+    const cardList = document.querySelectorAll('.card');
+    clearInterval(timerInterval);
+    elapsedTime = Date.now() - startTime.getTime();
+    isPaused = true;
+    cardList.forEach(card => card.classList.add('disabled'));
+    refs.hintBtn.disabled = true;
+  } else if (!isPaused) {
+    const cardList = document.querySelectorAll('.card');
+    clearInterval(timerInterval);
+    elapsedTime = Date.now() - startTime.getTime();
+    isPaused = true;
+    cardList.forEach(card => card.classList.add('disabled'));
+    refs.hintBtn.disabled = true;
+  };
 };
 
 function startTimer() {
@@ -441,10 +485,17 @@ function stopGame(e = null) {
   clearInterval(timerInterval);
   let currentTime = new Date().getTime();
   totalGameTime = ((currentTime - startTime) / 1000) % 60;
+  refs.difficultyList.forEach(difficulty => difficulty.classList.remove('disabled'));
+  refs.styleList.forEach(style => style.classList.remove('disabled'));
+  refs.difficultyList.forEach(difficulty => difficulty.classList.remove('chosen-difficulty'));
+  refs.styleList.forEach(style => style.classList.remove('chosen-style'));
+  refs.statsModal.style.display = 'flex';
+  refs.continueBtn.disabled = true;
   refs.timer.innerHTML = '00:00';
   refs.score.innerHTML = '0';
   matchedCards = [];
   score = 0;
+  markupStats();
 };
 
 function addLeaderingZero(time) {
@@ -457,6 +508,7 @@ function addLeaderingZero(time) {
 
 function loginModalClick(e) {
   if (e.target === refs.loginBtn) {
+    refs.buttonClickSound.play();
     refs.modal.style.display = 'flex';
   }
 };
@@ -474,6 +526,27 @@ function modalOutsideClick(e) {
   }
 };
 
+function onGameMenuClick(e) {
+  if (e.target.closest('BUTTON')) {
+    refs.buttonClickSound.play();
+    if (!isPaused) {
+      console.log(`is paused false check`);
+      pauseGame(e);
+    } else if (isPaused) {
+      console.log(`is paused true check`);
+      isPaused = false;
+      pauseGame(e);
+    };
+  };
+};
+
+function closeStatsModal(e) {
+  if (e.target === refs.closeStatsModalBtn) {
+    refs.buttonClickSound.play();
+    refs.statsModal.style.display = 'none';
+  };
+};
+
 refs.cardGallery.addEventListener('click', onCardClick);
 refs.resetBtn.addEventListener('click', resetGame);
 refs.pauseBtn.addEventListener('click', pauseGame);
@@ -487,3 +560,5 @@ refs.loginBtn.addEventListener('click', loginModalClick);
 refs.closeModalBtn.addEventListener('click', closeModal);
 refs.submitBtn.addEventListener("click", submitForm);
 refs.hintBtn.addEventListener('click', onHintBtnClick);
+refs.gameMenuBtn.addEventListener('click', onGameMenuClick);
+refs.closeStatsModalBtn.addEventListener('click', closeStatsModal);
