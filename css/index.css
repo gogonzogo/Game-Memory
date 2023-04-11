@@ -63,6 +63,7 @@ body .card__back-marvel,
 .marvel .card__back-marvel {
   width: 48px;
   height: 58px;
+  border-radius: 10px;
 }
 body .card__front-marvel,
 .marvel .card__front-marvel {

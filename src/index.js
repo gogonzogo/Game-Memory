@@ -64,6 +64,7 @@ async function getCards() {
   refs.difficultyList.forEach(difficulty => difficulty.classList.add('disabled'));
   refs.styleList.forEach(style => style.classList.add('disabled'));
   refs.cardLoadingAnimation.style.display = 'inline-block';
+  refs.startBtn.disabled = true;
   try {
     if (CHOSEN_STYLE === 'classic') {
       const classicCardsFetch = await fetch(`${CLASSIC_CARDS_BASE_URL}`);
@@ -433,6 +434,7 @@ function resetGame(e) {
 function pauseGame(e) {
   if (e.target.classList.contains('pause__button') || !isPaused) {
     refs.buttonClickSound.play();
+    refs.startBtn.disabled = false;
     const cardList = document.querySelectorAll('.card');
     clearInterval(timerInterval);
     elapsedTime = Date.now() - startTime.getTime();
@@ -471,13 +473,16 @@ function continueGame(e) {
     cardList.forEach(card => card.classList.remove('disabled'));
     refs.hintBtn.disabled = false;
     startTimer();
+    refs.startBtn.disabled = true;
   };
 };
 
 function stopGame(e = null) {
+  console.log(matchedCards);
+  console.log(NUMBER_OF_CARDS)
   if (e && !e.target.classList.contains('stop__button')) {
     return;
-  }
+  } if (matchedCards.length === NUMBER_OF_CARDS) {
   refs.buttonClickSound.play();
   clearInterval(timerInterval);
   let currentTime = new Date().getTime();
@@ -492,6 +497,20 @@ function stopGame(e = null) {
   setTimeout(() => {
     refs.statsModal.style.display = 'flex';
   }, 1000);
+  };
+  if (matchedCards !== NUMBER_OF_CARDS) {
+    refs.buttonClickSound.play();
+    clearInterval(timerInterval);
+    let currentTime = new Date().getTime();
+    totalGameTime = ((currentTime - startTime) / 1000) % 60;
+    refs.difficultyList.forEach(difficulty => difficulty.classList.remove('disabled'));
+    refs.styleList.forEach(style => style.classList.remove('disabled'));
+    refs.difficultyList.forEach(difficulty => difficulty.classList.remove('chosen-difficulty'));
+    refs.styleList.forEach(style => style.classList.remove('chosen-style'));
+    refs.continueBtn.disabled = true;
+    matchedCards = [];
+    score = 0;
+  }
 };
 
 function addLeaderingZero(time) {
