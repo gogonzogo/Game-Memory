@@ -478,8 +478,6 @@ function continueGame(e) {
 };
 
 function stopGame(e = null) {
-  console.log(matchedCards);
-  console.log(NUMBER_OF_CARDS)
   if (e && !e.target.classList.contains('stop__button')) {
     return;
   } if (matchedCards.length === NUMBER_OF_CARDS) {
