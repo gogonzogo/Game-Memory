@@ -101,12 +101,13 @@ function shuffleDrawCards(data, numCards) {
       marvelCard.thumbnail.extension !== '' &&
       marvelCard.thumbnail.extension !== 'gif'
     );
-    const randomIndices = Array.from({ length: filteredCards.length }, (_, i) => i)
-      .sort(() => Math.random() - 0.5);
-    const shuffledMarvelCards = randomIndices.map(i => filteredCards[i]);
-    const selectedMarvelCards = shuffledMarvelCards.slice(0, numCards);
+    const selectedMarvelCards = filteredCards.slice(0, numCards);
     const duplicatedMarvelCards = selectedMarvelCards.map(card => ({ ...card }));
     const drawnMarvelCards = selectedMarvelCards.concat(duplicatedMarvelCards);
+    for (let i = drawnMarvelCards.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [drawnMarvelCards[i], drawnMarvelCards[j]] = [drawnMarvelCards[j], drawnMarvelCards[i]];
+    }
     renderCardmarkup(drawnMarvelCards);
   } else if (CHOSEN_STYLE === 'classic') {
     const selectedClassicCards = data.slice(0, numCards);
@@ -481,20 +482,20 @@ function stopGame(e = null) {
   if (e && !e.target.classList.contains('stop__button')) {
     return;
   } if (matchedCards.length === NUMBER_OF_CARDS) {
-  refs.buttonClickSound.play();
-  clearInterval(timerInterval);
-  let currentTime = new Date().getTime();
-  totalGameTime = ((currentTime - startTime) / 1000) % 60;
-  refs.difficultyList.forEach(difficulty => difficulty.classList.remove('disabled'));
-  refs.styleList.forEach(style => style.classList.remove('disabled'));
-  refs.difficultyList.forEach(difficulty => difficulty.classList.remove('chosen-difficulty'));
-  refs.styleList.forEach(style => style.classList.remove('chosen-style'));
-  refs.continueBtn.disabled = true;
-  matchedCards = [];
-  score = 0;
-  setTimeout(() => {
-    refs.statsModal.style.display = 'flex';
-  }, 1000);
+    refs.buttonClickSound.play();
+    clearInterval(timerInterval);
+    let currentTime = new Date().getTime();
+    totalGameTime = ((currentTime - startTime) / 1000) % 60;
+    refs.difficultyList.forEach(difficulty => difficulty.classList.remove('disabled'));
+    refs.styleList.forEach(style => style.classList.remove('disabled'));
+    refs.difficultyList.forEach(difficulty => difficulty.classList.remove('chosen-difficulty'));
+    refs.styleList.forEach(style => style.classList.remove('chosen-style'));
+    refs.continueBtn.disabled = true;
+    matchedCards = [];
+    score = 0;
+    setTimeout(() => {
+      refs.statsModal.style.display = 'flex';
+    }, 1000);
   };
   if (matchedCards !== NUMBER_OF_CARDS) {
     refs.buttonClickSound.play();
